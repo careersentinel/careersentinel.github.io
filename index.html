@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Career Sentinel</title>
+<meta name="description" content="Every morning, Career Sentinel scans the German job market and scores each posting for your languages, your visa situation and your level of German. Built in Stuttgart by an international, for internationals.">
+<meta property="og:title" content="Career Sentinel — the German job market, working for you">
+<meta property="og:description" content="Daily scans of German job boards, honestly scored for internationals: language reality, visa fit, no relocation traps. Join the waitlist.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  :root {
+    --night: #0d1420;
+    --surface: #151f2e;
+    --surface-2: #1b2739;
+    --line: #263349;
+    --ink: #dee5ec;
+    --ink-dim: #8b98ab;
+    --signal: #37d67f;
+    --signal-dim: #1d5c3d;
+    --reject: #e4694a;
+    --warn: #e0b04f;
+    --display: "Bricolage Grotesque", Georgia, serif;
+    --body: "Public Sans", -apple-system, Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--night);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+  }
+  .logo {
+    font-family: var(--display); font-weight: 800; font-size: 20px;
+    letter-spacing: -0.01em; color: var(--ink); text-decoration: none;
+  }
+  .logo .dot { color: var(--signal); }
+  .made-in {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px;
+    align-items: center; padding: 48px 0 72px;
+  }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 40px; } }
+  .eyebrow {
+    font-family: var(--mono); font-size: 13px; color: var(--signal);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 800; font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.06; letter-spacing: -0.02em; text-wrap: balance;
+    margin-bottom: 20px;
+  }
+  h1 em { font-style: normal; color: var(--signal); }
+  .sub {
+    font-size: 18px; color: var(--ink-dim); max-width: 46ch; margin-bottom: 32px;
+  }
+  .sub strong { color: var(--ink); font-weight: 600; }
+
+  form.waitlist { display: flex; gap: 10px; max-width: 460px; }
+  @media (max-width: 520px) { form.waitlist { flex-direction: column; } }
+  form.waitlist input {
+    flex: 1; background: var(--surface); border: 1px solid var(--line);
+    color: var(--ink); font: 500 15px var(--body);
+    padding: 14px 16px; border-radius: 6px; min-width: 0;
+  }
+  form.waitlist input::placeholder { color: var(--ink-dim); }
+  form.waitlist input:focus, form.waitlist button:focus {
+    outline: 2px solid var(--signal); outline-offset: 2px;
+  }
+  form.waitlist button {
+    background: var(--signal); color: #08130c; border: 0; cursor: pointer;
+    font: 600 15px var(--body); padding: 14px 22px; border-radius: 6px;
+    white-space: nowrap;
+  }
+  form.waitlist button:hover { filter: brightness(1.08); }
+  .form-note { font-size: 13px; color: var(--ink-dim); margin-top: 12px; }
+
+  /* ---------- verdict stack (hero right) ---------- */
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .stack-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px;
+  }
+  .vcard {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 14px 16px;
+    display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: start;
+  }
+  .vcard .score {
+    font-family: var(--mono); font-weight: 500; font-size: 19px;
+    padding-top: 1px; text-align: right;
+  }
+  .score.ok { color: var(--signal); }
+  .score.warn { color: var(--warn); }
+  .score.no { color: var(--reject); }
+  .vcard .job { font-weight: 600; font-size: 15px; line-height: 1.35; }
+  .vcard .verdict {
+    font-size: 13.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.5;
+  }
+  .vcard.lift { border-color: var(--signal-dim); background: var(--surface-2); }
+
+  /* ---------- proof strip ---------- */
+  .proof {
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 26px 0;
+  }
+  .proof-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  }
+  @media (max-width: 720px) { .proof-grid { grid-template-columns: repeat(2, 1fr); } }
+  .proof .num {
+    font-family: var(--mono); font-size: 26px; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .proof .lbl { font-size: 13px; color: var(--ink-dim); margin-top: 2px; }
+  .proof-src { font-size: 12px; color: var(--ink-dim); margin-top: 16px; font-family: var(--mono); }
+
+  /* ---------- sections ---------- */
+  section { padding: 72px 0; }
+  h2 {
+    font-family: var(--display); font-weight: 800; font-size: clamp(26px, 3.4vw, 34px);
+    letter-spacing: -0.015em; line-height: 1.15; text-wrap: balance;
+    margin-bottom: 14px; max-width: 24ch;
+  }
+  .lede { color: var(--ink-dim); max-width: 62ch; margin-bottom: 40px; }
+  .lede strong { color: var(--ink); }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 24px;
+  }
+  .step .k {
+    font-family: var(--mono); font-size: 12px; color: var(--signal);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .step h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 10px 0 8px; }
+  .step p { font-size: 14.5px; color: var(--ink-dim); }
+  .step p strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- truth section ---------- */
+  .truth { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  @media (max-width: 860px) { .truth { grid-template-columns: 1fr; } }
+  .truth-list { display: flex; flex-direction: column; gap: 0; }
+  .truth-row {
+    display: grid; grid-template-columns: 22px 1fr; gap: 14px;
+    padding: 18px 0; border-bottom: 1px solid var(--line);
+  }
+  .truth-row:last-child { border-bottom: 0; }
+  .truth-row .mark { font-family: var(--mono); font-size: 15px; padding-top: 2px; }
+  .mark.ok { color: var(--signal); } .mark.no { color: var(--reject); }
+  .truth-row b { display: block; font-size: 15px; margin-bottom: 2px; }
+  .truth-row span { font-size: 14px; color: var(--ink-dim); }
+
+  .terminal {
+    background: #0a0f18; border: 1px solid var(--line); border-radius: 8px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.75;
+    padding: 20px; overflow-x: auto; white-space: pre; color: var(--ink-dim);
+  }
+  .terminal .g { color: var(--signal); }
+  .terminal .r { color: var(--reject); }
+  .terminal .y { color: var(--warn); }
+  .terminal .w { color: var(--ink); }
+
+  /* ---------- founder ---------- */
+  .founder {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 36px; display: grid; grid-template-columns: auto 1fr; gap: 28px;
+    align-items: start; max-width: 780px;
+  }
+  @media (max-width: 640px) { .founder { grid-template-columns: 1fr; } }
+  .founder .avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--signal-dim); color: var(--signal);
+    display: grid; place-items: center;
+    font-family: var(--display); font-weight: 800; font-size: 24px;
+  }
+  .founder p { font-size: 15.5px; color: var(--ink-dim); }
+  .founder p + p { margin-top: 12px; }
+  .founder p strong { color: var(--ink); }
+  .founder .sig { font-family: var(--mono); font-size: 13px; color: var(--signal); margin-top: 16px; }
+
+  /* ---------- final CTA + footer ---------- */
+  .final { padding: 84px 0; }
+  .final h2, .final > .wrap > .lede { text-align: center; margin-left: auto; margin-right: auto; }
+  .signup {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 32px; max-width: 720px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .field-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .field-label .opt { text-transform: none; letter-spacing: 0; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pills label {
+    cursor: pointer; user-select: none;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; font-size: 14px; color: var(--ink-dim);
+    background: var(--night);
+  }
+  .pills input { position: absolute; opacity: 0; pointer-events: none; }
+  .pills label:has(input:checked) {
+    border-color: var(--signal); color: var(--signal);
+    background: rgba(55, 214, 127, 0.08);
+  }
+  .pills label:has(input:focus-visible) { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup input[type="text"], .signup input[type="email"] {
+    width: 100%; background: var(--night); border: 1px solid var(--line);
+    color: var(--ink); font: 500 15px var(--body);
+    padding: 13px 16px; border-radius: 6px;
+  }
+  .signup input::placeholder { color: var(--ink-dim); }
+  .signup input:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .signup button {
+    background: var(--signal); color: #08130c; border: 0; cursor: pointer;
+    font: 600 15px var(--body); padding: 14px 26px; border-radius: 6px;
+  }
+  .signup button:hover { filter: brightness(1.08); }
+  .signup button:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup .form-note { margin: 0; }
+  footer {
+    border-top: 1px solid var(--line); padding: 28px 0 48px;
+    font-size: 13px; color: var(--ink-dim);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  footer .fine { max-width: 60ch; }
+  a { color: var(--signal); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="logo" href="#">Career Sentinel<span class="dot">.</span></a>
+    <div class="made-in">built in Stuttgart · für Internationals</div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">// Job hunting in Germany, for internationals</div>
+      <h1>Find the German jobs that <em>actually want you</em> — before you waste an application.</h1>
+      <p class="sub">Career Sentinel scans the German job market every morning and scores every posting for <strong>your</strong> reality: your languages, your visa situation, your level of German. No fluent-German dead ends. No jobs that quietly relocate you to Lisbon.</p>
+      <form class="waitlist" action="https://formspree.io/f/xyeyrnor" method="POST">
+        <input type="hidden" name="source" value="hero-quick-join">
+        <input type="email" name="email" required placeholder="you@email.com" aria-label="Email address">
+        <button type="submit">Join the waitlist</button>
+      </form>
+      <p class="form-note">Free while in beta. No spam — one email when your spot opens. Want better matches from day one? <a href="#profile">Tell us your situation ↓</a> · <a href="datenschutz.html">Privacy</a></p>
+    </div>
+
+    <div class="stack" aria-label="Example scored jobs">
+      <div class="stack-label">This morning's scan — scored for you</div>
+      <div class="vcard lift">
+        <div class="score ok">88%</div>
+        <div>
+          <div class="job">Sales Development Representative · remote, Germany</div>
+          <div class="verdict">English is the company language. Visa-friendly employer. Your 3 years of B2B experience fit the profile. Apply today.</div>
+        </div>
+      </div>
+      <div class="vcard">
+        <div class="score warn">67%</div>
+        <div>
+          <div class="job">Sales Representative · payments, field sales</div>
+          <div class="verdict">Skills match, but daily visits to German-speaking merchants. Realistic with B1+, tough at A2. Your call.</div>
+        </div>
+      </div>
+      <div class="vcard">
+        <div class="score no">0%</div>
+        <div>
+          <div class="job">Key Account Manager · München</div>
+          <div class="verdict">Requires C1 German ("verhandlungssicher"). Filtered out so you never waste an evening on it.</div>
+        </div>
+      </div>
+      <div class="vcard">
+        <div class="score no">35%</div>
+        <div>
+          <div class="job">Customer Support · "German market"</div>
+          <div class="verdict">Fine print: role is based in Lisbon. Leaving Germany would end your residency track. Skipped.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proof">
+  <div class="wrap">
+    <div class="proof-grid">
+      <div><div class="num">2,000+</div><div class="lbl">postings screened in the first week</div></div>
+      <div><div class="num">85%</div><div class="lbl">rejected over language requirements, most unstated</div></div>
+      <div><div class="num">25</div><div class="lbl">true high-fit matches surfaced</div></div>
+      <div><div class="num">15</div><div class="lbl">tailored applications sent, each tracked</div></div>
+    </div>
+    <div class="proof-src">— live numbers from the founder's own job hunt, running right now</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section>
+    <h2>Every morning, while you sleep</h2>
+    <p class="lede">One scan across LinkedIn, StepStone and the English-language corners of the German market — fresh postings only, scored and prepared before your coffee.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="k">07:55 — scan</div>
+        <h3>The market, filtered to reality</h3>
+        <p>Fresh 24-hour postings for your roles and cities. Duplicates collapsed. Postings that closed overnight removed. <strong>Priority to your region</strong> — Stuttgart before Somewhere.</p>
+      </div>
+      <div class="step">
+        <div class="k">08:20 — judge</div>
+        <h3>Scored like an honest friend</h3>
+        <p>Each job gets a match score built on <strong>your</strong> CV, your German level, and your visa situation — including the requirements the posting doesn't say out loud.</p>
+      </div>
+      <div class="step">
+        <div class="k">08:40 — prepare</div>
+        <h3>Documents, ready to send</h3>
+        <p>For every high match: a CV tailored to that posting in your own design, a cover letter in the posting's language, and the direct application link — <strong>on your phone</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="truth">
+      <div>
+        <h2>The judgment layer nobody else has</h2>
+        <p class="lede">Auto-apply tools blast 200 applications and call it progress. Recruiters can tell. Career Sentinel sends <strong>fewer, better</strong> — because it understands things generic tools don't:</p>
+        <div class="truth-list">
+          <div class="truth-row">
+            <div class="mark no">✗</div>
+            <div><b>"Fluent German" hidden between the lines</b>
+            <span>A German-market phone-support role needs B2+ even when the ad is in English. We score it honestly instead of letting you burn an application.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark no">✗</div>
+            <div><b>Jobs that end your residency</b>
+            <span>"German-speaking role!" — in Lisbon, Athens or Dublin. If you're building a life in Germany, a relocation trap is worth 0%, whatever the salary.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark ok">✓</div>
+            <div><b>Your other languages as an asset</b>
+            <span>Arabic, Turkish, Polish, French — support and market roles actively want them. We hunt those postings for you.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark ok">✓</div>
+            <div><b>Two tracks when it matters</b>
+            <span>Career roles that secure your future — and honest income options for the months in between. Both scored, clearly labeled, never confused.</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="terminal"><span class="w">$ career-sentinel — morning report</span>
+
+<span class="g">🎯 88%</span>  SDR (Remote) — Deel
+       <span class="g">→ apply link + tailored CV ready</span>
+<span class="g">🎯 86%</span>  Customer Success — Bosch
+       <span class="g">→ Ludwigsburg, 20 min from you</span>
+<span class="y">·  67%</span>  Field Sales — payments
+       <span class="y">→ needs B1 German in practice</span>
+<span class="r">·   0%</span>  KAM München — C1 required
+<span class="r">·  35%</span>  "German support" — Lisbon trap
+
+<span class="w">258 screened · 2 worth your evening</span>
+<span class="w">documents prepared. go get them.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="founder">
+      <div class="avatar">M</div>
+      <div>
+        <p><strong>I built this because I am the customer.</strong> I'm Maher — a sales professional from Beirut with a German Master's degree, a Chancenkarte, native English and Arabic, and A2 German that I'm working on every week.</p>
+        <p>The job boards showed me thousands of jobs I could never get, and buried the ones I could. So I built a machine that reads the market the way I have to: <strong>Which jobs are really open to internationals? Which secure a residence permit? Which are traps?</strong> It found my matches, wrote my applications, and it runs every morning while I sleep.</p>
+        <p>Now I'm opening it up to people in the same boat. If that's you — get on the list.</p>
+        <p class="sig">— Maher Chehab, Stuttgart</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="final" id="profile">
+  <div class="wrap">
+    <h2>The German job market, working for you for once.</h2>
+    <p class="lede">Beta opens soon, free for the first wave. Tell us your situation and your first morning scan is matched to you from day one.</p>
+    <form class="signup" action="https://formspree.io/f/xyeyrnor" method="POST">
+      <input type="hidden" name="source" value="full-profile-form">
+      <div>
+        <div class="field-label">Your email *</div>
+        <input type="email" name="email" required placeholder="you@email.com" aria-label="Email address">
+      </div>
+      <div>
+        <div class="field-label">Your German level</div>
+        <div class="pills" role="group" aria-label="German level">
+          <label><input type="radio" name="german_level" value="none">None yet</label>
+          <label><input type="radio" name="german_level" value="A1">A1</label>
+          <label><input type="radio" name="german_level" value="A2">A2</label>
+          <label><input type="radio" name="german_level" value="B1">B1</label>
+          <label><input type="radio" name="german_level" value="B2">B2</label>
+          <label><input type="radio" name="german_level" value="C1+">C1+</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Other languages you speak well <span class="opt">(they're assets here)</span></div>
+        <div class="pills" role="group" aria-label="Other languages">
+          <label><input type="checkbox" name="languages" value="Arabic">Arabic</label>
+          <label><input type="checkbox" name="languages" value="Turkish">Turkish</label>
+          <label><input type="checkbox" name="languages" value="French">French</label>
+          <label><input type="checkbox" name="languages" value="Spanish">Spanish</label>
+          <label><input type="checkbox" name="languages" value="Italian">Italian</label>
+          <label><input type="checkbox" name="languages" value="Polish">Polish</label>
+          <label><input type="checkbox" name="languages" value="Russian">Russian</label>
+          <label><input type="checkbox" name="languages" value="Ukrainian">Ukrainian</label>
+          <label><input type="checkbox" name="languages" value="Hindi/Urdu">Hindi/Urdu</label>
+          <label><input type="checkbox" name="languages" value="Chinese">Chinese</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">What roles are you hunting?</div>
+        <div class="pills" role="group" aria-label="Role areas">
+          <label><input type="checkbox" name="roles" value="Sales / Business Development">Sales / BizDev</label>
+          <label><input type="checkbox" name="roles" value="Customer Support / Success">Customer Support</label>
+          <label><input type="checkbox" name="roles" value="Marketing">Marketing</label>
+          <label><input type="checkbox" name="roles" value="IT / Engineering">IT / Engineering</label>
+          <label><input type="checkbox" name="roles" value="Finance / Analysis">Finance / Analysis</label>
+          <label><input type="checkbox" name="roles" value="Logistics / Operations">Logistics / Ops</label>
+          <label><input type="checkbox" name="roles" value="Design / Creative">Design / Creative</label>
+          <label><input type="checkbox" name="roles" value="Any honest work right now">Any honest work right now</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Your situation <span class="opt">(optional — helps us prioritize people on a clock)</span></div>
+        <div class="pills" role="group" aria-label="Visa situation">
+          <label><input type="radio" name="situation" value="Chancenkarte / job-seeker visa">Chancenkarte / job-seeker</label>
+          <label><input type="radio" name="situation" value="Student / graduate">Student / graduate</label>
+          <label><input type="radio" name="situation" value="Work permit / Blue Card">Work permit / Blue Card</label>
+          <label><input type="radio" name="situation" value="EU citizen">EU citizen</label>
+          <label><input type="radio" name="situation" value="Not in Germany yet">Not in Germany yet</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">City / region <span class="opt">(optional)</span></div>
+        <input type="text" name="city" placeholder="e.g. Stuttgart, Berlin, anywhere remote">
+      </div>
+      <div class="submit-row">
+        <button type="submit">Join the waitlist</button>
+        <p class="form-note">Free while in beta. Your answers only shape your matches — never shared. <a href="datenschutz.html">Privacy policy</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap">
+  <footer>
+    <div>Career Sentinel<span style="color:var(--signal)">.</span> © 2026 · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></div>
+    <div class="fine">Not affiliated with LinkedIn, StepStone or Indeed. We prepare your applications and tell you the truth about your chances — you always press send. Ehrlich währt am längsten.</div>
+  </footer>
+</div>
+</body>
+</html>
