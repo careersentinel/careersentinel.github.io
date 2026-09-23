@@ -246,9 +246,35 @@
   }
   footer .fine { max-width: 60ch; }
   a { color: var(--signal); }
+
+  /* ---------- interactivity (JS-gated; page fully readable without) ---------- */
+  .level-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .level-picker .lp-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 2px;
+  }
+  .level-picker button {
+    font: 500 13px var(--mono); cursor: pointer;
+    background: var(--night); color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+  }
+  .level-picker button:hover { border-color: var(--signal-dim); }
+  .level-picker button[aria-pressed="true"] {
+    border-color: var(--signal); color: var(--signal);
+    background: rgba(55, 214, 127, 0.08);
+  }
+  .level-picker button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+  html.js .stack { display: flex; flex-direction: column; }
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .vcard, html.js .step { opacity: 0; transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease; }
+    html.js .vcard.in, html.js .step.in { opacity: 1; transform: none; }
+    html.js .vcard { transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, background 0.3s ease; }
+  }
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.add('js')</script>
 
 <div class="wrap">
   <header>
@@ -270,29 +296,37 @@
     </div>
 
     <div class="stack" aria-label="Example scored jobs">
-      <div class="stack-label">This morning's scan — scored for you</div>
-      <div class="vcard lift">
+      <div class="stack-label">Example morning scan — scored for you</div>
+      <div class="level-picker" id="level-picker" hidden>
+        <span class="lp-label">Your German:</span>
+        <button type="button" data-level="none">None</button>
+        <button type="button" data-level="a2" aria-pressed="true">A2</button>
+        <button type="button" data-level="b1">B1</button>
+        <button type="button" data-level="b2">B2</button>
+        <button type="button" data-level="c1">C1</button>
+      </div>
+      <div class="vcard lift" id="card-sdr" style="order:1">
         <div class="score ok">88%</div>
         <div>
           <div class="job">Sales Development Representative · remote, Germany</div>
           <div class="verdict">English is the company language. Visa-friendly employer. Your 3 years of B2B experience fit the profile. Apply today.</div>
         </div>
       </div>
-      <div class="vcard">
+      <div class="vcard" id="card-field" style="order:2">
         <div class="score warn">67%</div>
         <div>
           <div class="job">Sales Representative · payments, field sales</div>
           <div class="verdict">Skills match, but daily visits to German-speaking merchants. Realistic with B1+, tough at A2. Your call.</div>
         </div>
       </div>
-      <div class="vcard">
+      <div class="vcard" id="card-kam" style="order:3">
         <div class="score no">0%</div>
         <div>
           <div class="job">Key Account Manager · München</div>
           <div class="verdict">Requires C1 German ("verhandlungssicher"). Filtered out so you never waste an evening on it.</div>
         </div>
       </div>
-      <div class="vcard">
+      <div class="vcard" id="card-trap" style="order:4">
         <div class="score no">35%</div>
         <div>
           <div class="job">Customer Support · "German market"</div>
@@ -479,5 +513,102 @@
     <div class="fine">Not affiliated with LinkedIn, StepStone or Indeed. We prepare your applications and tell you the truth about your chances — you always press send. Ehrlich währt am längsten.</div>
   </footer>
 </div>
+<script>
+(function () {
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- interactive score demo ---- */
+  var DEMO = {
+    none: {
+      sdr:   [80, "English is the company language. Visa-friendly employer. English-first sales teams hire at every German level — your B2B experience carries this."],
+      field: [22, "Skills match, but daily visits to German-speaking merchants. Not realistic before A2–B1. Parked — resurfaces as your German grows."],
+      kam:   [0,  "Requires C1 German (“verhandlungssicher”). Filtered out so you never waste an evening on it."],
+      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. No German level fixes a relocation trap. Skipped."]
+    },
+    a2: {
+      sdr:   [88, "English is the company language. Visa-friendly employer. Your 3 years of B2B experience fit the profile. Apply today."],
+      field: [67, "Skills match, but daily visits to German-speaking merchants. Realistic with B1+, tough at A2. Your call."],
+      kam:   [0,  "Requires C1 German (“verhandlungssicher”). Filtered out so you never waste an evening on it."],
+      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. Skipped."]
+    },
+    b1: {
+      sdr:   [90, "English company language, and your B1 covers the office small talk. Visa-friendly employer. Apply today."],
+      field: [76, "Daily merchant visits in German — realistic at B1 with a fast ramp. Worth a serious look."],
+      kam:   [0,  "Requires C1 (“verhandlungssicher”) — still a wall at B1. Filtered out so you never waste an evening."],
+      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. No German level fixes that. Skipped."]
+    },
+    b2: {
+      sdr:   [91, "English company language — and your German unlocks the DACH accounts too. Strong fit. Apply today."],
+      field: [84, "Your B2 handles the merchant visits. Skills match. Apply."],
+      kam:   [45, "Ad demands C1; a strong B2 sometimes survives the interview when the domain fit is excellent. Flagged as an honest maybe — your call."],
+      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. B2 doesn't fix a relocation trap. Skipped."]
+    },
+    c1: {
+      sdr:   [92, "English company language, full DACH reach with your German. Top of this morning's stack. Apply today."],
+      field: [88, "Language wall gone — scored purely on skills fit now, and yours is strong. Apply."],
+      kam:   [86, "The C1 wall is behind you. Scored on experience fit — close match. Apply."],
+      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. Even C1 doesn't fix a relocation trap. Skipped."]
+    }
+  };
+  var picker = document.getElementById("level-picker");
+  if (picker) {
+    picker.hidden = false;
+    picker.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-level]");
+      if (!btn) return;
+      picker.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      var data = DEMO[btn.dataset.level];
+      var entries = Object.keys(data).map(function (k) {
+        return { card: document.getElementById("card-" + k), score: data[k][0], text: data[k][1] };
+      }).sort(function (a, b) { return b.score - a.score; });
+      entries.forEach(function (en, i) {
+        var scoreEl = en.card.querySelector(".score");
+        scoreEl.textContent = en.score + "%";
+        scoreEl.className = "score " + (en.score >= 75 ? "ok" : en.score >= 50 ? "warn" : "no");
+        en.card.querySelector(".verdict").textContent = en.text;
+        en.card.style.order = i + 1;
+        en.card.classList.toggle("lift", i === 0);
+      });
+    });
+  }
+
+  /* ---- count-up proof numbers ---- */
+  var counted = false;
+  function countUp() {
+    if (counted) return; counted = true;
+    document.querySelectorAll(".proof .num").forEach(function (el) {
+      var raw = el.textContent, m = raw.match(/[\d,]+/);
+      if (!m) return;
+      var target = parseInt(m[0].replace(/,/g, ""), 10), start = null;
+      function frame(t) {
+        if (!start) start = t;
+        var p = Math.min((t - start) / 900, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = raw.replace(m[0], Math.round(target * eased).toLocaleString("en-US"));
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  /* ---- reveals ---- */
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        if (en.target.classList.contains("proof")) { if (!reduced) countUp(); }
+        else en.target.classList.add("in");
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".vcard, .step").forEach(function (el) { io.observe(el); });
+    var proof = document.querySelector(".proof");
+    if (proof) io.observe(proof);
+  } else {
+    document.querySelectorAll(".vcard, .step").forEach(function (el) { el.classList.add("in"); });
+  }
+})();
+</script>
 </body>
 </html>
