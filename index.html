@@ -560,6 +560,16 @@
         b.setAttribute("aria-pressed", b === btn ? "true" : "false");
       });
       var data = DEMO[btn.dataset.level];
+      applyLevel(data);
+    });
+    var urlLevel = new URLSearchParams(location.search).get("level");
+    if (urlLevel && DEMO[urlLevel]) {
+      picker.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.dataset.level === urlLevel ? "true" : "false");
+      });
+      applyLevel(DEMO[urlLevel]);
+    }
+    function applyLevel(data) {
       var entries = Object.keys(data).map(function (k) {
         return { card: document.getElementById("card-" + k), score: data[k][0], text: data[k][1] };
       }).sort(function (a, b) { return b.score - a.score; });
@@ -571,7 +581,7 @@
         en.card.style.order = i + 1;
         en.card.classList.toggle("lift", i === 0);
       });
-    });
+    }
   }
 
   /* ---- count-up proof numbers ---- */
