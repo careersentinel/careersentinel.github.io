@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Career Sentinel</title>
+<meta name="description" content="Jeden Morgen scannt Career Sentinel den deutschen Arbeitsmarkt und bewertet jede Stelle für deine Sprachen, deine Visa-Situation und dein Deutschlevel. Gebaut in Stuttgart.">
+<meta property="og:title" content="Career Sentinel — der deutsche Arbeitsmarkt, endlich für dich">
+<meta property="og:description" content="Tägliche Scans des deutschen Arbeitsmarkts, ehrlich bewertet: echte Sprachanforderungen, Visa-Fit, keine Relocation-Fallen. Trag dich auf die Warteliste ein.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://careersentinel.github.io/de/">
+<meta property="og:image" content="https://careersentinel.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+  :root {
+    --night: #0d1420;
+    --surface: #151f2e;
+    --surface-2: #1b2739;
+    --line: #263349;
+    --ink: #dee5ec;
+    --ink-dim: #8b98ab;
+    --signal: #37d67f;
+    --signal-dim: #1d5c3d;
+    --reject: #e4694a;
+    --warn: #e0b04f;
+    --display: "Bricolage Grotesque", Georgia, serif;
+    --body: "Public Sans", -apple-system, Helvetica, Arial, sans-serif;
+    --mono: "IBM Plex Mono", Menlo, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--night);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 0;
+  }
+  .logo {
+    font-family: var(--display); font-weight: 800; font-size: 20px;
+    letter-spacing: -0.01em; color: var(--ink); text-decoration: none;
+  }
+  .logo .dot { color: var(--signal); }
+  .made-in {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px;
+    align-items: center; padding: 48px 0 72px;
+  }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 40px; } }
+  .eyebrow {
+    font-family: var(--mono); font-size: 13px; color: var(--signal);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 800; font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.06; letter-spacing: -0.02em; text-wrap: balance;
+    margin-bottom: 20px;
+  }
+  h1 em { font-style: normal; color: var(--signal); }
+  .sub {
+    font-size: 18px; color: var(--ink-dim); max-width: 46ch; margin-bottom: 32px;
+  }
+  .sub strong { color: var(--ink); font-weight: 600; }
+
+  form.waitlist { display: flex; gap: 10px; max-width: 460px; }
+  @media (max-width: 520px) { form.waitlist { flex-direction: column; } }
+  form.waitlist input {
+    flex: 1; background: var(--surface); border: 1px solid var(--line);
+    color: var(--ink); font: 500 15px var(--body);
+    padding: 14px 16px; border-radius: 6px; min-width: 0;
+  }
+  form.waitlist input::placeholder { color: var(--ink-dim); }
+  form.waitlist input:focus, form.waitlist button:focus {
+    outline: 2px solid var(--signal); outline-offset: 2px;
+  }
+  form.waitlist button {
+    background: var(--signal); color: #08130c; border: 0; cursor: pointer;
+    font: 600 15px var(--body); padding: 14px 22px; border-radius: 6px;
+    white-space: nowrap;
+  }
+  form.waitlist button:hover { filter: brightness(1.08); }
+  .form-note { font-size: 13px; color: var(--ink-dim); margin-top: 12px; }
+
+  /* ---------- verdict stack (hero right) ---------- */
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .stack-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px;
+  }
+  .vcard {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 14px 16px;
+    display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: start;
+  }
+  .vcard .score {
+    font-family: var(--mono); font-weight: 500; font-size: 19px;
+    padding-top: 1px; text-align: right;
+  }
+  .score.ok { color: var(--signal); }
+  .score.warn { color: var(--warn); }
+  .score.no { color: var(--reject); }
+  .vcard .job { font-weight: 600; font-size: 15px; line-height: 1.35; }
+  .vcard .verdict {
+    font-size: 13.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.5;
+  }
+  .vcard.lift { border-color: var(--signal-dim); background: var(--surface-2); }
+
+  /* ---------- proof strip ---------- */
+  .proof {
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 26px 0;
+  }
+  .proof-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  }
+  @media (max-width: 720px) { .proof-grid { grid-template-columns: repeat(2, 1fr); } }
+  .proof .num {
+    font-family: var(--mono); font-size: 26px; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .proof .lbl { font-size: 13px; color: var(--ink-dim); margin-top: 2px; }
+  .proof-src { font-size: 12px; color: var(--ink-dim); margin-top: 16px; font-family: var(--mono); }
+
+  /* ---------- sections ---------- */
+  section { padding: 72px 0; }
+  h2 {
+    font-family: var(--display); font-weight: 800; font-size: clamp(26px, 3.4vw, 34px);
+    letter-spacing: -0.015em; line-height: 1.15; text-wrap: balance;
+    margin-bottom: 14px; max-width: 24ch;
+  }
+  .lede { color: var(--ink-dim); max-width: 62ch; margin-bottom: 40px; }
+  .lede strong { color: var(--ink); }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 24px;
+  }
+  .step .k {
+    font-family: var(--mono); font-size: 12px; color: var(--signal);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .step h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 10px 0 8px; }
+  .step p { font-size: 14.5px; color: var(--ink-dim); }
+  .step p strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- truth section ---------- */
+  .truth { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  @media (max-width: 860px) { .truth { grid-template-columns: 1fr; } }
+  .truth-list { display: flex; flex-direction: column; gap: 0; }
+  .truth-row {
+    display: grid; grid-template-columns: 22px 1fr; gap: 14px;
+    padding: 18px 0; border-bottom: 1px solid var(--line);
+  }
+  .truth-row:last-child { border-bottom: 0; }
+  .truth-row .mark { font-family: var(--mono); font-size: 15px; padding-top: 2px; }
+  .mark.ok { color: var(--signal); } .mark.no { color: var(--reject); }
+  .truth-row b { display: block; font-size: 15px; margin-bottom: 2px; }
+  .truth-row span { font-size: 14px; color: var(--ink-dim); }
+
+  .terminal {
+    background: #0a0f18; border: 1px solid var(--line); border-radius: 8px;
+    font-family: var(--mono); font-size: 13px; line-height: 1.75;
+    padding: 20px; overflow-x: auto; white-space: pre; color: var(--ink-dim);
+  }
+  .terminal .g { color: var(--signal); }
+  .terminal .r { color: var(--reject); }
+  .terminal .y { color: var(--warn); }
+  .terminal .w { color: var(--ink); }
+
+  /* ---------- founder ---------- */
+  .founder {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 36px; display: grid; grid-template-columns: auto 1fr; gap: 28px;
+    align-items: start; max-width: 780px;
+  }
+  @media (max-width: 640px) { .founder { grid-template-columns: 1fr; } }
+  .founder .avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--signal-dim); color: var(--signal);
+    display: grid; place-items: center;
+    font-family: var(--display); font-weight: 800; font-size: 24px;
+  }
+  .founder p { font-size: 15.5px; color: var(--ink-dim); }
+  .founder p + p { margin-top: 12px; }
+  .founder p strong { color: var(--ink); }
+  .founder .sig { font-family: var(--mono); font-size: 13px; color: var(--signal); margin-top: 16px; }
+
+  /* ---------- final CTA + footer ---------- */
+  .final { padding: 84px 0; }
+  .final h2, .final > .wrap > .lede { text-align: center; margin-left: auto; margin-right: auto; }
+  .signup {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 32px; max-width: 720px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .field-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .field-label .opt { text-transform: none; letter-spacing: 0; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pills label {
+    cursor: pointer; user-select: none;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 14px; font-size: 14px; color: var(--ink-dim);
+    background: var(--night);
+  }
+  .pills input { position: absolute; opacity: 0; pointer-events: none; }
+  .pills label:has(input:checked) {
+    border-color: var(--signal); color: var(--signal);
+    background: rgba(55, 214, 127, 0.08);
+  }
+  .pills label:has(input:focus-visible) { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup input[type="text"], .signup input[type="email"] {
+    width: 100%; background: var(--night); border: 1px solid var(--line);
+    color: var(--ink); font: 500 15px var(--body);
+    padding: 13px 16px; border-radius: 6px;
+  }
+  .signup input::placeholder { color: var(--ink-dim); }
+  .signup input:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .signup button {
+    background: var(--signal); color: #08130c; border: 0; cursor: pointer;
+    font: 600 15px var(--body); padding: 14px 26px; border-radius: 6px;
+  }
+  .signup button:hover { filter: brightness(1.08); }
+  .signup button:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup .form-note { margin: 0; }
+  footer {
+    border-top: 1px solid var(--line); padding: 28px 0 48px;
+    font-size: 13px; color: var(--ink-dim);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  footer .fine { max-width: 60ch; }
+  a { color: var(--signal); }
+
+  /* ---------- interactivity (JS-gated; page fully readable without) ---------- */
+  .level-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .level-picker .lp-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 2px;
+  }
+  .level-picker button {
+    font: 500 13px var(--mono); cursor: pointer;
+    background: var(--night); color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+  }
+  .level-picker button:hover { border-color: var(--signal-dim); }
+  .level-picker button[aria-pressed="true"] {
+    border-color: var(--signal); color: var(--signal);
+    background: rgba(55, 214, 127, 0.08);
+  }
+  .level-picker button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+  html.js .stack { display: flex; flex-direction: column; }
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .vcard, html.js .step { opacity: 0; transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease; }
+    html.js .vcard.in, html.js .step.in { opacity: 1; transform: none; }
+    html.js .vcard { transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, background 0.3s ease; }
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<div class="wrap">
+  <header>
+    <a class="logo" href="#">Career Sentinel<span class="dot">.</span></a>
+    <div class="made-in"><a href="../" style="text-decoration:none">EN</a> · gebaut in Stuttgart</div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">// Jobsuche in Deutschland, für alle Jobsuchenden</div>
+      <h1>Finde die Jobs, die dich <em>wirklich wollen</em> – bevor du eine Bewerbung verschwendest.</h1>
+      <p class="sub">Career Sentinel scannt jeden Morgen den deutschen Arbeitsmarkt und bewertet jede Stelle für <strong>deine</strong> Realität: deine Sprachen, deine Visa-Situation, dein Deutschlevel. Keine Fließend-Deutsch-Sackgassen. Keine Jobs, die dich leise ins Ausland verschieben.</p>
+      <form class="waitlist" action="https://formspree.io/f/xyeyrnor" method="POST">
+        <input type="hidden" name="source" value="hero-quick-join">
+        <input type="email" name="email" required placeholder="du@email.de" aria-label="Email address">
+        <button type="submit">Auf die Warteliste</button>
+      </form>
+      <p class="form-note">Kostenlos in der Beta. Kein Spam – eine E-Mail, wenn dein Platz frei wird. Bessere Matches ab Tag 1? <a href="#profile">Erzähl uns deine Situation ↓</a> · <a href="../datenschutz.html">Datenschutz</a></p>
+    </div>
+
+    <div class="stack" aria-label="Example scored jobs">
+      <div class="stack-label">Beispiel-Morgenscan — bewertet für dich</div>
+      <div class="level-picker" id="level-picker" hidden>
+        <span class="lp-label">Dein Deutsch:</span>
+        <button type="button" data-level="none">Keins</button>
+        <button type="button" data-level="a2" aria-pressed="true">A2</button>
+        <button type="button" data-level="b1">B1</button>
+        <button type="button" data-level="b2">B2</button>
+        <button type="button" data-level="c1">C1</button>
+      </div>
+      <div class="vcard lift" id="card-sdr" style="order:1">
+        <div class="score ok">88%</div>
+        <div>
+          <div class="job">Sales Development Representative · remote, Deutschland</div>
+          <div class="verdict">Englisch ist die Firmensprache. Visafreundlicher Arbeitgeber. Deine 3 Jahre B2B-Erfahrung passen aufs Profil. Heute bewerben.</div>
+        </div>
+      </div>
+      <div class="vcard" id="card-field" style="order:2">
+        <div class="score warn">67%</div>
+        <div>
+          <div class="job">Sales Representative · Payments, Außendienst</div>
+          <div class="verdict">Skills passen, aber tägliche Besuche bei deutschsprachigen Händlern. Realistisch ab B1+, hart mit A2. Deine Entscheidung.</div>
+        </div>
+      </div>
+      <div class="vcard" id="card-kam" style="order:3">
+        <div class="score no">0%</div>
+        <div>
+          <div class="job">Key Account Manager · München</div>
+          <div class="verdict">Verlangt C1 („verhandlungssicher"). Aussortiert, damit du keinen Abend daran verschwendest.</div>
+        </div>
+      </div>
+      <div class="vcard" id="card-trap" style="order:4">
+        <div class="score no">35%</div>
+        <div>
+          <div class="job">Customer Support · „deutscher Markt“</div>
+          <div class="verdict">Kleingedrucktes: Der Job sitzt in Wirklichkeit im Ausland. Deutschland zu verlassen würde deinen Aufenthaltsweg beenden. Übersprungen.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="proof">
+  <div class="wrap">
+    <div class="proof-grid">
+      <div><div class="num">5,000+</div><div class="lbl">Stellen gescannt — und es werden jeden Morgen mehr</div></div>
+      <div><div class="num">89%</div><div class="lbl">abgelehnt wegen Deutsch-Anforderungen, viele nie in der Anzeige genannt</div></div>
+      <div><div class="num">31</div><div class="lbl">echte Top-Matches gefunden</div></div>
+      <div><div class="num">15</div><div class="lbl">maßgeschneiderte Bewerbungen verschickt, jede getrackt</div></div>
+    </div>
+    <div class="proof-src">— echte Zahlen aus der Jobsuche des Gründers, sie läuft genau jetzt</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section>
+    <h2>Jeden Morgen, während du schläfst</h2>
+    <p class="lede">Ein Scan über den deutschen Arbeitsmarkt — offizielle Stellen, Startup-Jobboards und die englischsprachigen Ecken, die kaum jemand findet — nur frische Anzeigen, bewertet und vorbereitet vor deinem Kaffee.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="k">07:55 — Scan</div>
+        <h3>Der Markt, auf Realität gefiltert</h3>
+        <p>Frische 24-Stunden-Stellen für deine Rollen und Städte. Duplikate zusammengelegt. Über Nacht geschlossene Anzeigen entfernt. <strong>Deine Region zuerst</strong> — Stuttgart vor Sonstwo.</p>
+      </div>
+      <div class="step">
+        <div class="k">08:20 — Urteil</div>
+        <h3>Bewertet wie von einem ehrlichen Freund</h3>
+        <p>Jede Stelle bekommt einen Match-Score auf Basis <strong>deines</strong> Lebenslaufs, deines Deutschlevels und deiner Visa-Situation — inklusive der Anforderungen, die die Anzeige nicht laut sagt.</p>
+      </div>
+      <div class="step">
+        <div class="k">08:40 — Unterlagen</div>
+        <h3>Unterlagen, fertig zum Absenden</h3>
+        <p>Für jeden Top-Match: ein auf die Stelle zugeschnittener Lebenslauf in deinem Design, ein Anschreiben in der Sprache der Anzeige und der direkte Bewerbungslink — <strong>auf deinem Handy</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="truth">
+      <div>
+        <h2>Die Urteilsschicht, die sonst niemand hat</h2>
+        <p class="lede">Auto-Apply-Tools ballern 200 Bewerbungen raus und nennen es Fortschritt. Recruiter merken das. Career Sentinel schickt <strong>weniger, aber bessere</strong> — weil es Dinge versteht, die generische Tools nicht sehen:</p>
+        <div class="truth-list">
+          <div class="truth-row">
+            <div class="mark no">✗</div>
+            <div><b>„Fließend Deutsch" zwischen den Zeilen</b>
+            <span>Eine Telefon-Support-Rolle für den deutschen Markt braucht B2+, auch wenn die Anzeige auf Englisch ist. Wir bewerten das ehrlich, statt dich eine Bewerbung verbrennen zu lassen.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark no">✗</div>
+            <div><b>Jobs, die deinen Aufenthalt beenden</b>
+            <span>„Deutschsprachige Rolle!" — in Wirklichkeit außerhalb Deutschlands. Wer sich hier ein Leben aufbaut, für den ist eine Relocation-Falle 0 % wert, egal welches Gehalt.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark ok">✓</div>
+            <div><b>Deine anderen Sprachen als Stärke</b>
+            <span>Arabisch, Türkisch, Polnisch, Französisch — Support- und Marktrollen suchen genau das. Wir jagen diese Stellen für dich.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark ok">✓</div>
+            <div><b>Zwei Spuren, wenn es darauf ankommt</b>
+            <span>Karrierejobs, die deine Zukunft sichern — und ehrliche Einkommensjobs für die Monate dazwischen. Beides bewertet, klar getrennt, nie verwechselt.</span></div>
+          </div>
+          <div class="truth-row">
+            <div class="mark ok">✓</div>
+            <div><b>Schon bei B2 oder C1? Noch mehr Türen</b>
+            <span>Besseres Deutsch multipliziert deine Matches — heißt aber nicht, dass der Markt dich fair liest. Wir finden alles, wofür du qualifiziert bist, mit fertigen Unterlagen in der Sprache der Anzeige.</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="terminal"><span class="w">$ career-sentinel — Morgenreport</span>
+
+<span class="g">🎯 88%</span>  SDR (Remote) — Deel
+       <span class="g">→ Bewerbungslink + passender CV bereit</span>
+<span class="g">🎯 86%</span>  Customer Success — Bosch
+       <span class="g">→ Ludwigsburg, 20 Min. von dir</span>
+<span class="y">·  67%</span>  Field Sales — payments
+       <span class="y">→ braucht in der Praxis B1 Deutsch</span>
+<span class="r">·   0%</span>  KAM München — C1 verlangt
+<span class="r">·  35%</span>  „German Support" — Relocation-Falle
+
+<span class="w">258 gescannt · 2 deinen Abend wert</span>
+<span class="w">Unterlagen fertig. Hol sie dir.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="founder">
+      <div class="avatar">M</div>
+      <div>
+        <p><strong>Ich habe das gebaut, weil ich selbst der Kunde bin.</strong> Ich bin Maher — Vertriebsprofi und International in Deutschland, mit deutschem Masterabschluss, Englisch und Arabisch als Muttersprachen und A2-Deutsch, an dem ich jede Woche arbeite.</p>
+        <p>Die Jobbörsen zeigten mir tausende Jobs, die ich nie bekommen konnte — und begruben die, die ich bekommen konnte. Also habe ich eine Maschine gebaut, die den Markt so liest, wie ich es muss: <strong>Welche Jobs sind wirklich offen für Internationals? Welche sichern einen Aufenthaltstitel? Welche sind Fallen?</strong> Sie fand meine Matches, schrieb meine Bewerbungen und läuft jeden Morgen, während ich schlafe.</p>
+        <p>Jetzt öffne ich sie für Leute im selben Boot. Wenn das du bist — trag dich ein.</p>
+        <p class="sig">— Maher, Stuttgart</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="final" id="profile">
+  <div class="wrap">
+    <h2>Der deutsche Arbeitsmarkt — endlich mal für dich.</h2>
+    <p class="lede">Die Beta startet bald, kostenlos für die erste Welle. Erzähl uns deine Situation, und dein erster Morgenscan passt vom ersten Tag an zu dir.</p>
+    <form class="signup" action="https://formspree.io/f/xyeyrnor" method="POST">
+      <input type="hidden" name="source" value="full-profile-form">
+      <div>
+        <div class="field-label">Deine E-Mail *</div>
+        <input type="email" name="email" required placeholder="du@email.de" aria-label="Email address">
+      </div>
+      <div>
+        <div class="field-label">Dein Deutschlevel</div>
+        <div class="pills" role="group" aria-label="German level">
+          <label><input type="radio" name="german_level" value="none">Noch keins</label>
+          <label><input type="radio" name="german_level" value="A1">A1</label>
+          <label><input type="radio" name="german_level" value="A2">A2</label>
+          <label><input type="radio" name="german_level" value="B1">B1</label>
+          <label><input type="radio" name="german_level" value="B2">B2</label>
+          <label><input type="radio" name="german_level" value="C1+">C1+</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Andere Sprachen, die du gut sprichst <span class="opt">(hier sind sie Stärken)</span></div>
+        <div class="pills" role="group" aria-label="Other languages">
+          <label><input type="checkbox" name="languages" value="Arabic">Arabisch</label>
+          <label><input type="checkbox" name="languages" value="Turkish">Türkisch</label>
+          <label><input type="checkbox" name="languages" value="French">Französisch</label>
+          <label><input type="checkbox" name="languages" value="Spanish">Spanisch</label>
+          <label><input type="checkbox" name="languages" value="Italian">Italienisch</label>
+          <label><input type="checkbox" name="languages" value="Polish">Polnisch</label>
+          <label><input type="checkbox" name="languages" value="Russian">Russisch</label>
+          <label><input type="checkbox" name="languages" value="Ukrainian">Ukrainisch</label>
+          <label><input type="checkbox" name="languages" value="Hindi/Urdu">Hindi/Urdu</label>
+          <label><input type="checkbox" name="languages" value="Chinese">Chinesisch</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Welche Rollen suchst du?</div>
+        <div class="pills" role="group" aria-label="Role areas">
+          <label><input type="checkbox" name="roles" value="Sales / Business Development">Sales / BizDev</label>
+          <label><input type="checkbox" name="roles" value="Customer Support / Success">Customer Support</label>
+          <label><input type="checkbox" name="roles" value="Marketing">Marketing</label>
+          <label><input type="checkbox" name="roles" value="IT / Engineering">IT / Engineering</label>
+          <label><input type="checkbox" name="roles" value="Finance / Analysis">Finanzen / Analyse</label>
+          <label><input type="checkbox" name="roles" value="Logistics / Operations">Logistik / Ops</label>
+          <label><input type="checkbox" name="roles" value="Design / Creative">Design / Kreativ</label>
+          <label><input type="checkbox" name="roles" value="Any honest work right now">Erstmal jede ehrliche Arbeit</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Deine Situation <span class="opt">(optional — hilft uns, Leute mit Zeitdruck zu priorisieren)</span></div>
+        <div class="pills" role="group" aria-label="Visa situation">
+          <label><input type="radio" name="situation" value="Chancenkarte / job-seeker visa">Chancenkarte / Jobsuche-Visum</label>
+          <label><input type="radio" name="situation" value="Student / graduate">Student:in / Absolvent:in</label>
+          <label><input type="radio" name="situation" value="Work permit / Blue Card">Arbeitserlaubnis / Blue Card</label>
+          <label><input type="radio" name="situation" value="EU citizen">EU-Bürger:in</label>
+          <label><input type="radio" name="situation" value="Not in Germany yet">Noch nicht in Deutschland</label>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Stadt / Region <span class="opt">(optional)</span></div>
+        <input type="text" name="city" placeholder="z. B. Stuttgart, Berlin, überall remote">
+      </div>
+      <div class="submit-row">
+        <button type="submit">Auf die Warteliste</button>
+        <p class="form-note">Kostenlos in der Beta. Deine Antworten formen nur deine Matches — werden nie geteilt. <a href="../datenschutz.html">Datenschutz</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap">
+  <footer>
+    <div>Career Sentinel<span style="color:var(--signal)">.</span> © 2026 · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></div>
+    <div class="fine">Nicht verbunden mit LinkedIn, StepStone oder Indeed. Wir bereiten deine Bewerbungen vor und sagen dir die Wahrheit über deine Chancen — auf Absenden drückst immer du. Ehrlich währt am längsten.</div>
+  </footer>
+</div>
+<script>
+(function () {
+  var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- interactive score demo ---- */
+  var DEMO = {
+    none: {
+      sdr:   [80, "Englisch ist die Firmensprache. Visafreundlicher Arbeitgeber. English-first-Teams stellen auf jedem Deutschlevel ein — deine B2B-Erfahrung trägt das."],
+      field: [22, "Skills passen, aber tägliche Besuche bei deutschsprachigen Händlern. Vor A2–B1 nicht realistisch. Geparkt — taucht wieder auf, wenn dein Deutsch wächst."],
+      kam:   [0,  "Verlangt C1 („verhandlungssicher“). Aussortiert, damit du keinen Abend daran verschwendest."],
+      trap:  [35, "Kleingedrucktes: Der Job sitzt in Wirklichkeit im Ausland. Deutschland zu verlassen würde deinen Aufenthaltsweg beenden. Kein Deutschlevel repariert eine Relocation-Falle. Übersprungen."]
+    },
+    a2: {
+      sdr:   [88, "Englisch ist die Firmensprache. Visafreundlicher Arbeitgeber. Deine 3 Jahre B2B-Erfahrung passen aufs Profil. Heute bewerben."],
+      field: [67, "Skills passen, aber tägliche Besuche bei deutschsprachigen Händlern. Realistisch ab B1+, hart mit A2. Deine Entscheidung."],
+      kam:   [0,  "Verlangt C1 („verhandlungssicher“). Aussortiert, damit du keinen Abend daran verschwendest."],
+      trap:  [35, "Kleingedrucktes: Der Job sitzt in Wirklichkeit im Ausland. Deutschland zu verlassen würde deinen Aufenthaltsweg beenden. Übersprungen."]
+    },
+    b1: {
+      sdr:   [90, "Englische Firmensprache, und dein B1 reicht für den Büro-Smalltalk. Visafreundlich. Heute bewerben."],
+      field: [76, "Tägliche Händlerbesuche auf Deutsch — mit B1 und schneller Lernkurve realistisch. Ernsthaft anschauen."],
+      kam:   [0,  "Verlangt C1 („verhandlungssicher“) — auch mit B1 noch eine Wand. Aussortiert, damit du keinen Abend verschwendest."],
+      trap:  [35, "Kleingedrucktes: Der Job sitzt in Wirklichkeit im Ausland. Deutschland zu verlassen würde deinen Aufenthaltsweg beenden. Kein Deutschlevel ändert das. Übersprungen."]
+    },
+    b2: {
+      sdr:   [91, "Englische Firmensprache — und dein Deutsch öffnet zusätzlich die DACH-Kunden. Starker Fit. Heute bewerben."],
+      field: [84, "Dein B2 trägt die Händlerbesuche. Skills passen. Bewerben."],
+      kam:   [45, "Anzeige verlangt C1; ein starkes B2 übersteht das Interview manchmal, wenn der Rest exzellent passt. Ehrliches Vielleicht — deine Entscheidung."],
+      trap:  [35, "Kleingedrucktes: Der Job sitzt in Wirklichkeit im Ausland. Deutschland zu verlassen würde deinen Aufenthaltsweg beenden. B2 repariert keine Relocation-Falle. Übersprungen."]
+    },
+    c1: {
+      sdr:   [92, "Englische Firmensprache, volle DACH-Reichweite mit deinem Deutsch. Ganz oben im heutigen Stapel. Heute bewerben."],
+      field: [88, "Sprachwand weg — jetzt zählt nur noch der Skills-Fit, und deiner ist stark. Bewerben."],
+      kam:   [86, "Die C1-Wand liegt hinter dir. Bewertet nach Erfahrungs-Fit — knapp dran. Bewerben."],
+      trap:  [35, "Kleingedrucktes: Der Job sitzt in Wirklichkeit im Ausland. Deutschland zu verlassen würde deinen Aufenthaltsweg beenden. Selbst C1 repariert keine Relocation-Falle. Übersprungen."]
+    }
+  };
+  var picker = document.getElementById("level-picker");
+  if (picker) {
+    picker.hidden = false;
+    picker.addEventListener("click", function (e) {
+      var btn = e.target.closest("button[data-level]");
+      if (!btn) return;
+      picker.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
+      var data = DEMO[btn.dataset.level];
+      applyLevel(data);
+    });
+    var urlLevel = new URLSearchParams(location.search).get("level");
+    if (urlLevel && DEMO[urlLevel]) {
+      picker.querySelectorAll("button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.dataset.level === urlLevel ? "true" : "false");
+      });
+      applyLevel(DEMO[urlLevel]);
+    }
+    function applyLevel(data) {
+      var entries = Object.keys(data).map(function (k) {
+        return { card: document.getElementById("card-" + k), score: data[k][0], text: data[k][1] };
+      }).sort(function (a, b) { return b.score - a.score; });
+      entries.forEach(function (en, i) {
+        var scoreEl = en.card.querySelector(".score");
+        scoreEl.textContent = en.score + "%";
+        scoreEl.className = "score " + (en.score >= 75 ? "ok" : en.score >= 50 ? "warn" : "no");
+        en.card.querySelector(".verdict").textContent = en.text;
+        en.card.style.order = i + 1;
+        en.card.classList.toggle("lift", i === 0);
+      });
+    }
+  }
+
+  /* ---- count-up proof numbers ---- */
+  var counted = false;
+  function countUp() {
+    if (counted) return; counted = true;
+    document.querySelectorAll(".proof .num").forEach(function (el) {
+      var raw = el.textContent, m = raw.match(/[\d,]+/);
+      if (!m) return;
+      var target = parseInt(m[0].replace(/,/g, ""), 10), start = null;
+      function frame(t) {
+        if (!start) start = t;
+        var p = Math.min((t - start) / 900, 1), eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = raw.replace(m[0], Math.round(target * eased).toLocaleString("en-US"));
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  /* ---- reveals ---- */
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        if (en.target.classList.contains("proof")) { if (!reduced) countUp(); }
+        else en.target.classList.add("in");
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".vcard, .step").forEach(function (el) { io.observe(el); });
+    var proof = document.querySelector(".proof");
+    if (proof) io.observe(proof);
+  } else {
+    document.querySelectorAll(".vcard, .step").forEach(function (el) { el.classList.add("in"); });
+  }
+})();
+</script>
+</body>
+</html>
