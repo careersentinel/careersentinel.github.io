@@ -8,9 +8,10 @@
 <meta property="og:title" content="Career Sentinel — der deutsche Arbeitsmarkt, endlich für dich">
 <meta property="og:description" content="Tägliche Scans des deutschen Arbeitsmarkts, ehrlich bewertet: echte Sprachanforderungen, Visa-Fit, keine Relocation-Fallen. Trag dich auf die Warteliste ein.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://careersentinel.github.io/de/">
-<meta property="og:image" content="https://careersentinel.github.io/og-image.png">
+<meta property="og:url" content="https://careersentinel.de/de/">
+<meta property="og:image" content="https://careersentinel.de/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://careersentinel.de/de/">
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
   :root {
@@ -272,6 +273,19 @@
     html.js .vcard { transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, background 0.3s ease; }
   }
 </style>
+<script>
+(function () {
+  if (location.hostname.endsWith("github.io")) {
+    location.replace("https://careersentinel.de" + location.pathname.replace(/^\/?/, "/") + location.search);
+    return;
+  }
+  if (location.hostname.endsWith("careersentinel.de")) {
+    var s = document.createElement("script");
+    s.defer = true; s.src = "/_vercel/insights/script.js";
+    document.head.appendChild(s);
+  }
+})();
+</script>
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
