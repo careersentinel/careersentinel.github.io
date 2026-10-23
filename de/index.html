@@ -272,6 +272,10 @@
     html.js .vcard.in, html.js .step.in { opacity: 1; transform: none; }
     html.js .vcard { transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, background 0.3s ease; }
   }
+  /* Honeypot. The forms carry no JavaScript and no CAPTCHA, so a field
+     that humans never see and bots fill in anyway is the defence. Kept
+     off-screen rather than display:none, which more bots recognise. */
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 </style>
 <script>
 (function () {
@@ -301,12 +305,15 @@
       <div class="eyebrow">// Jobsuche in Deutschland, für alle Jobsuchenden</div>
       <h1>Finde die Jobs, die dich <em>wirklich wollen</em> – bevor du eine Bewerbung verschwendest.</h1>
       <p class="sub">Career Sentinel scannt jeden Morgen den deutschen Arbeitsmarkt und bewertet jede Stelle für <strong>deine</strong> Realität: deine Sprachen, deine Visa-Situation, dein Deutschlevel. Keine Fließend-Deutsch-Sackgassen. Keine Jobs, die dich leise ins Ausland verschieben.</p>
-      <form class="waitlist" action="https://formspree.io/f/xyeyrnor" method="POST">
+      <form class="waitlist" action="https://app.careersentinel.de/waitlist" method="POST">
+        <input type="hidden" name="lang" value="de">
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <input type="hidden" name="source" value="hero-quick-join">
         <input type="email" name="email" required placeholder="du@email.de" aria-label="Email address">
         <button type="submit">Auf die Warteliste</button>
       </form>
       <p class="form-note">Kostenlos in der Beta. Kein Spam – eine E-Mail, wenn dein Platz frei wird. Bessere Matches ab Tag 1? <a href="#profile">Erzähl uns deine Situation ↓</a> · <a href="../datenschutz.html">Datenschutz</a></p>
+        <p class="form-note consent">Mit dem Eintrag in die Warteliste erklärst du dich damit einverstanden, dass wir deine Angaben speichern und dir E-Mails zu Career Sentinel schicken. Du kannst jederzeit mit einem Klick widerrufen.</p>
     </div>
 
     <div class="stack" aria-label="Example scored jobs">
@@ -454,7 +461,9 @@
   <div class="wrap">
     <h2>Der deutsche Arbeitsmarkt — endlich mal für dich.</h2>
     <p class="lede">Die Beta startet bald, kostenlos für die erste Welle. Erzähl uns deine Situation, und dein erster Morgenscan passt vom ersten Tag an zu dir.</p>
-    <form class="signup" action="https://formspree.io/f/xyeyrnor" method="POST">
+    <form class="signup" action="https://app.careersentinel.de/waitlist" method="POST">
+        <input type="hidden" name="lang" value="de">
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <input type="hidden" name="source" value="full-profile-form">
       <div>
         <div class="field-label">Deine E-Mail *</div>
@@ -517,6 +526,7 @@
       <div class="submit-row">
         <button type="submit">Auf die Warteliste</button>
         <p class="form-note">Kostenlos in der Beta. Deine Antworten formen nur deine Matches — werden nie geteilt. <a href="../datenschutz.html">Datenschutz</a></p>
+        <p class="form-note consent">Mit dem Eintrag in die Warteliste erklärst du dich damit einverstanden, dass wir deine Angaben speichern und dir E-Mails zu Career Sentinel schicken. Du kannst jederzeit mit einem Klick widerrufen.</p>
       </div>
     </form>
   </div>

@@ -272,6 +272,10 @@
     html.js .vcard.in, html.js .step.in { opacity: 1; transform: none; }
     html.js .vcard { transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, background 0.3s ease; }
   }
+  /* Honeypot. The forms carry no JavaScript and no CAPTCHA, so a field
+     that humans never see and bots fill in anyway is the defence. Kept
+     off-screen rather than display:none, which more bots recognise. */
+  .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 </style>
 <script>
 (function () {
@@ -301,12 +305,15 @@
       <div class="eyebrow">// Job hunting in Germany, for every job seeker</div>
       <h1>Find the German jobs that <em>actually want you</em> — before you waste an application.</h1>
       <p class="sub">Career Sentinel scans the German job market every morning and scores every posting for <strong>your</strong> reality: your languages, your visa situation, your level of German. No fluent-German dead ends. No jobs that quietly relocate you abroad.</p>
-      <form class="waitlist" action="https://formspree.io/f/xyeyrnor" method="POST">
+      <form class="waitlist" action="https://app.careersentinel.de/waitlist" method="POST">
+        <input type="hidden" name="lang" value="en">
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <input type="hidden" name="source" value="hero-quick-join">
         <input type="email" name="email" required placeholder="you@email.com" aria-label="Email address">
         <button type="submit">Join the waitlist</button>
       </form>
       <p class="form-note">Free while in beta. No spam — one email when your spot opens. Want better matches from day one? <a href="#profile">Tell us your situation ↓</a> · <a href="datenschutz.html">Privacy</a></p>
+        <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
     </div>
 
     <div class="stack" aria-label="Example scored jobs">
@@ -454,7 +461,9 @@
   <div class="wrap">
     <h2>The German job market, working for you for once.</h2>
     <p class="lede">Beta opens soon, free for the first wave. Tell us your situation and your first morning scan is matched to you from day one.</p>
-    <form class="signup" action="https://formspree.io/f/xyeyrnor" method="POST">
+    <form class="signup" action="https://app.careersentinel.de/waitlist" method="POST">
+        <input type="hidden" name="lang" value="en">
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <input type="hidden" name="source" value="full-profile-form">
       <div>
         <div class="field-label">Your email *</div>
@@ -517,6 +526,7 @@
       <div class="submit-row">
         <button type="submit">Join the waitlist</button>
         <p class="form-note">Free while in beta. Your answers only shape your matches — never shared. <a href="datenschutz.html">Privacy policy</a></p>
+        <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
       </div>
     </form>
   </div>
