@@ -9,13 +9,16 @@
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
   :root {
-    --night: #0d1420;
-    --surface: #151f2e;
-    --line: #263349;
-    --ink: #dee5ec;
-    --ink-dim: #8b98ab;
-    --signal: #37d67f;
-    --reject: #e4694a;
+    /* Same palette and the same one-job-per-colour rule as index.html. */
+    --night: #002F43;
+    --surface: #014865;
+    --line: #166F94;
+    --ink: #FFFFFF;
+    --ink-dim: #C0D8E4;
+    --signal: #01648E;
+    --on-signal: #FFFFFF;
+    --accent: #428BAB;
+    --reject: #FF9478;
     --display: "Bricolage Grotesque", Georgia, serif;
     --body: "Public Sans", -apple-system, Helvetica, Arial, sans-serif;
     --mono: "IBM Plex Mono", Menlo, monospace;
@@ -28,7 +31,7 @@
   .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
   header { display: flex; align-items: center; justify-content: space-between; padding: 22px 0 48px; }
   .logo { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
-  .logo .dot { color: var(--signal); }
+  .logo .dot { color: var(--accent); }
   .back { font-family: var(--mono); font-size: 13px; }
   h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 4.5vw, 40px); letter-spacing: -0.02em; margin-bottom: 8px; }
   .subtitle { color: var(--ink-dim); margin-bottom: 32px; }
@@ -39,9 +42,10 @@
   ul { padding-left: 22px; margin-bottom: 12px; }
   p strong, li strong, address strong { color: var(--ink); }
   address { font-style: normal; color: var(--ink-dim); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px; margin: 16px 0; line-height: 1.8; }
-  a { color: var(--signal); }
+  a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { color: var(--ink); }
   .draft-banner {
-    background: rgba(228, 105, 74, 0.12); border: 1px solid var(--reject);
+    background: rgba(255, 148, 120, 0.12); border: 1px solid var(--reject);
     border-radius: 8px; padding: 16px 20px; margin-bottom: 36px;
     font-size: 14px; color: var(--ink);
   }
@@ -125,7 +129,7 @@
   <p>We will update this policy when the service changes — for example when the beta launches. The current version is always available on this page.</p>
 
   <footer>
-    Career Sentinel<span style="color:var(--signal)">.</span> © 2026 ·
+    Career Sentinel<span style="color:var(--accent)">.</span> © 2026 ·
     <a href="index.html">Home</a> · <a href="impressum.html">Impressum</a>
   </footer>
 </div>

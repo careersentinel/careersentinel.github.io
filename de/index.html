@@ -15,16 +15,30 @@
 <link rel="stylesheet" href="../fonts/fonts.css">
 <style>
   :root {
-    --night: #0d1420;
-    --surface: #151f2e;
-    --surface-2: #1b2739;
-    --line: #263349;
-    --ink: #dee5ec;
-    --ink-dim: #8b98ab;
-    --signal: #37d67f;
-    --signal-dim: #1d5c3d;
-    --reject: #e4694a;
-    --warn: #e0b04f;
+    /* Brand palette from the designer: 002F43 / 01648E / 428BAB / C0D8E4
+       / FFFFFF / 2B2B2B / 000000, matching app.careersentinel.de.
+       Each colour has ONE job, because the brand blues are not readable
+       as body text on this background: --signal fills buttons and is
+       never text; --accent draws borders and may carry LARGE text only
+       (3.71 on --night, which clears the 3.0 large text is allowed and
+       misses the 4.5 body text needs); --ink-dim is the only blue safe
+       at body size. --good, --warn and --reject sit deliberately
+       outside the palette: they carry meaning in the demo, and seven
+       blues cannot say "this one will waste your time".
+       Measured on --surface: white 9.9, --ink-dim 6.7, --good 5.2,
+       --warn 4.9, --reject 4.6, white on --signal 6.5. */
+    --night: #002F43;
+    --surface: #014865;
+    --surface-2: #01526F;
+    --line: #166F94;
+    --ink: #FFFFFF;
+    --ink-dim: #C0D8E4;
+    --signal: #01648E;
+    --on-signal: #FFFFFF;
+    --accent: #428BAB;
+    --good: #37D67F;
+    --warn: #F2A65A;
+    --reject: #FF9478;
     --display: "Bricolage Grotesque", Georgia, serif;
     --body: "Public Sans", -apple-system, Helvetica, Arial, sans-serif;
     --mono: "IBM Plex Mono", Menlo, monospace;
@@ -48,7 +62,7 @@
     font-family: var(--display); font-weight: 800; font-size: 20px;
     letter-spacing: -0.01em; color: var(--ink); text-decoration: none;
   }
-  .logo .dot { color: var(--signal); }
+  .logo .dot { color: var(--accent); }
   .made-in {
     font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
   }
@@ -60,7 +74,7 @@
   }
   @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 40px; } }
   .eyebrow {
-    font-family: var(--mono); font-size: 13px; color: var(--signal);
+    font-family: var(--mono); font-size: 13px; color: var(--ink-dim);
     letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px;
   }
   h1 {
@@ -68,7 +82,7 @@
     line-height: 1.06; letter-spacing: -0.02em; text-wrap: balance;
     margin-bottom: 20px;
   }
-  h1 em { font-style: normal; color: var(--signal); }
+  h1 em { font-style: normal; color: var(--accent); }
   .sub {
     font-size: 18px; color: var(--ink-dim); max-width: 46ch; margin-bottom: 32px;
   }
@@ -83,10 +97,10 @@
   }
   form.waitlist input::placeholder { color: var(--ink-dim); }
   form.waitlist input:focus, form.waitlist button:focus {
-    outline: 2px solid var(--signal); outline-offset: 2px;
+    outline: 2px solid var(--ink); outline-offset: 2px;
   }
   form.waitlist button {
-    background: var(--signal); color: #08130c; border: 0; cursor: pointer;
+    background: var(--signal); color: var(--on-signal); border: 0; cursor: pointer;
     font: 600 15px var(--body); padding: 14px 22px; border-radius: 6px;
     white-space: nowrap;
   }
@@ -108,14 +122,14 @@
     font-family: var(--mono); font-weight: 500; font-size: 19px;
     padding-top: 1px; text-align: right;
   }
-  .score.ok { color: var(--signal); }
+  .score.ok { color: var(--good); }
   .score.warn { color: var(--warn); }
   .score.no { color: var(--reject); }
   .vcard .job { font-weight: 600; font-size: 15px; line-height: 1.35; }
   .vcard .verdict {
     font-size: 13.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.5;
   }
-  .vcard.lift { border-color: var(--signal-dim); background: var(--surface-2); }
+  .vcard.lift { border-color: var(--accent); background: var(--surface-2); }
 
   /* ---------- proof strip ---------- */
   .proof {
@@ -150,7 +164,7 @@
     border-radius: 8px; padding: 24px;
   }
   .step .k {
-    font-family: var(--mono); font-size: 12px; color: var(--signal);
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
     letter-spacing: 0.08em; text-transform: uppercase;
   }
   .step h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 10px 0 8px; }
@@ -167,16 +181,16 @@
   }
   .truth-row:last-child { border-bottom: 0; }
   .truth-row .mark { font-family: var(--mono); font-size: 15px; padding-top: 2px; }
-  .mark.ok { color: var(--signal); } .mark.no { color: var(--reject); }
+  .mark.ok { color: var(--good); } .mark.no { color: var(--reject); }
   .truth-row b { display: block; font-size: 15px; margin-bottom: 2px; }
   .truth-row span { font-size: 14px; color: var(--ink-dim); }
 
   .terminal {
-    background: #0a0f18; border: 1px solid var(--line); border-radius: 8px;
+    background: #00202E; border: 1px solid var(--line); border-radius: 8px;
     font-family: var(--mono); font-size: 13px; line-height: 1.75;
     padding: 20px; overflow-x: auto; white-space: pre; color: var(--ink-dim);
   }
-  .terminal .g { color: var(--signal); }
+  .terminal .g { color: var(--good); }
   .terminal .r { color: var(--reject); }
   .terminal .y { color: var(--warn); }
   .terminal .w { color: var(--ink); }
@@ -190,14 +204,14 @@
   @media (max-width: 640px) { .founder { grid-template-columns: 1fr; } }
   .founder .avatar {
     width: 64px; height: 64px; border-radius: 50%;
-    background: var(--signal-dim); color: var(--signal);
+    background: var(--signal); color: var(--on-signal);
     display: grid; place-items: center;
     font-family: var(--display); font-weight: 800; font-size: 24px;
   }
   .founder p { font-size: 15.5px; color: var(--ink-dim); }
   .founder p + p { margin-top: 12px; }
   .founder p strong { color: var(--ink); }
-  .founder .sig { font-family: var(--mono); font-size: 13px; color: var(--signal); margin-top: 16px; }
+  .founder .sig { font-family: var(--mono); font-size: 13px; color: var(--ink-dim); margin-top: 16px; }
 
   /* ---------- final CTA + footer ---------- */
   .final { padding: 84px 0; }
@@ -221,24 +235,24 @@
   }
   .pills input { position: absolute; opacity: 0; pointer-events: none; }
   .pills label:has(input:checked) {
-    border-color: var(--signal); color: var(--signal);
-    background: rgba(55, 214, 127, 0.08);
+    border-color: var(--accent); color: var(--ink);
+    background: rgba(66, 139, 171, 0.16);
   }
-  .pills label:has(input:focus-visible) { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .pills label:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
   .signup input[type="text"], .signup input[type="email"] {
     width: 100%; background: var(--night); border: 1px solid var(--line);
     color: var(--ink); font: 500 15px var(--body);
     padding: 13px 16px; border-radius: 6px;
   }
   .signup input::placeholder { color: var(--ink-dim); }
-  .signup input:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup input:focus { outline: 2px solid var(--ink); outline-offset: 2px; }
   .signup .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   .signup button {
-    background: var(--signal); color: #08130c; border: 0; cursor: pointer;
+    background: var(--signal); color: var(--on-signal); border: 0; cursor: pointer;
     font: 600 15px var(--body); padding: 14px 26px; border-radius: 6px;
   }
   .signup button:hover { filter: brightness(1.08); }
-  .signup button:focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .signup button:focus { outline: 2px solid var(--ink); outline-offset: 2px; }
   .signup .form-note { margin: 0; }
   footer {
     border-top: 1px solid var(--line); padding: 28px 0 48px;
@@ -246,7 +260,8 @@
     display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   }
   footer .fine { max-width: 60ch; }
-  a { color: var(--signal); }
+  a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 2px; }
+  a:hover { color: var(--ink); }
 
   /* ---------- interactivity (JS-gated; page fully readable without) ---------- */
   .level-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
@@ -259,12 +274,12 @@
     background: var(--night); color: var(--ink-dim);
     border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
   }
-  .level-picker button:hover { border-color: var(--signal-dim); }
+  .level-picker button:hover { border-color: var(--accent); }
   .level-picker button[aria-pressed="true"] {
-    border-color: var(--signal); color: var(--signal);
-    background: rgba(55, 214, 127, 0.08);
+    border-color: var(--accent); color: var(--ink);
+    background: rgba(66, 139, 171, 0.16);
   }
-  .level-picker button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .level-picker button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   html.js .stack { display: flex; flex-direction: column; }
   @media (prefers-reduced-motion: no-preference) {
     html.js .vcard, html.js .step { opacity: 0; transform: translateY(14px);
@@ -534,7 +549,7 @@
 
 <div class="wrap">
   <footer>
-    <div>Career Sentinel<span style="color:var(--signal)">.</span> © 2026 · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></div>
+    <div>Career Sentinel<span style="color:var(--accent)">.</span> © 2026 · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></div>
     <div class="fine">Nicht verbunden mit LinkedIn, StepStone oder Indeed. Wir bereiten deine Bewerbungen vor und sagen dir die Wahrheit über deine Chancen — auf Absenden drückst immer du. Ehrlich währt am längsten.</div>
   </footer>
 </div>
