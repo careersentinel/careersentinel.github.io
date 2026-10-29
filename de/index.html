@@ -651,6 +651,23 @@
     });
   }
 
+  /* ---- which post sent this visit ---- */
+  /* A link like ?utm_campaign=ig-01 is appended to the form's source
+     ("hero-quick-join|ig-01"), so the signup row says which post it came
+     from. No cookie, nothing stored in the browser. The app caps source
+     at 40 characters, so the campaign gets what is left. */
+  var campaign = "";
+  try {
+    var q = new URLSearchParams(location.search);
+    campaign = (q.get("utm_campaign") || q.get("utm_source") || "")
+      .toLowerCase().replace(/[^a-z0-9_-]/g, "");
+  } catch (e) {}
+  if (campaign) {
+    document.querySelectorAll('form input[name="source"]').forEach(function (el) {
+      el.value = (el.value + "|" + campaign).slice(0, 40);
+    });
+  }
+
   /* ---- reveals ---- */
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (es) {
