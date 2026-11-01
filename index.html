@@ -111,6 +111,11 @@
     white-space: nowrap;
   }
   form.waitlist button:hover { filter: brightness(1.08); }
+  /* one optional tap under the email: who is actually signing up */
+  form.waitlist { flex-wrap: wrap; }
+  .quick-q { flex-basis: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px;
+    font-size: 13px; color: var(--ink-dim); }
+  .quick-q .pills label { padding: 5px 12px; font-size: 13px; }
   .form-note { font-size: 13px; color: var(--ink-dim); margin-top: 12px; max-width: 52ch; }
 
   /* ---------- morning scan panel (hero right) ---------- */
@@ -378,15 +383,21 @@
 
   <div class="hero">
     <div>
-      <div class="eyebrow">Job hunting in Germany, for internationals and students</div>
+      <div class="eyebrow">Honest job matches for everyone in Germany</div>
       <h1>Stop applying to jobs you were <em>never going to get.</em></h1>
-      <p class="sub">Every morning Career Sentinel reads the new German job ads and scores each one for <strong>your</strong> German, your visa and your languages. You only see the ones worth your time.</p>
+      <p class="sub">Every morning Career Sentinel reads the new German job ads and scores each one against <strong>your</strong> experience and skills. German not your first language? It also checks how much German each ad really wants, and whether it fits your visa. You only see the ones worth your time.</p>
       <form class="waitlist" action="https://app.careersentinel.de/waitlist" method="POST">
         <input type="hidden" name="lang" value="en">
         <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <input type="hidden" name="source" value="hero-quick-join">
         <input type="email" name="email" required placeholder="you@email.com" aria-label="Email address">
         <button type="submit">Join the waitlist</button>
+        <div class="quick-q"><span>Is German your first language?</span>
+          <div class="pills" role="group" aria-label="Is German your first language?">
+            <label><input type="radio" name="german_level" value="native">Yes</label>
+            <label><input type="radio" name="german_level" value="not native">No</label>
+          </div>
+        </div>
       </form>
       <p class="form-note">Free while in beta. One email when your spot opens. <a href="#profile">Tell me your situation ↓</a> · <a href="datenschutz.html">Privacy</a></p>
       <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
@@ -401,6 +412,7 @@
         <button type="button" data-level="b1">B1</button>
         <button type="button" data-level="b2">B2</button>
         <button type="button" data-level="c1">C1</button>
+        <button type="button" data-level="native">Native</button>
       </div>
       <div class="stack">
         <div class="vcard lift" id="card-sdr" style="order:1">
@@ -561,6 +573,7 @@
           <label><input type="radio" name="german_level" value="B1">B1</label>
           <label><input type="radio" name="german_level" value="B2">B2</label>
           <label><input type="radio" name="german_level" value="C1+">C1+</label>
+          <label><input type="radio" name="german_level" value="native">First language</label>
         </div>
       </div>
       <div>
@@ -657,6 +670,12 @@
       field: [88, "Language wall gone. Scored on skills now, and yours are strong. Apply."],
       kam:   [86, "The C1 wall is behind you. Close match on experience. Apply."],
       trap:  [35, "Actually based abroad. Even C1 doesn't fix that. Skipped."]
+    },
+    native: {
+      sdr:   [84, "Fits your experience. English-first team, and your German opens the DACH accounts. Apply."],
+      field: [88, "Shop visits in German are home turf. Skills match. Apply."],
+      kam:   [62, "German is no issue. The ad wants 8+ years, you have 6. Honest maybe, your call."],
+      trap:  [35, "Actually based abroad, not in Germany. Skipped."]
     }
   };
   var picker = document.getElementById("level-picker");

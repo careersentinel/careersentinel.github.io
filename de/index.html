@@ -111,6 +111,11 @@
     white-space: nowrap;
   }
   form.waitlist button:hover { filter: brightness(1.08); }
+  /* one optional tap under the email: who is actually signing up */
+  form.waitlist { flex-wrap: wrap; }
+  .quick-q { flex-basis: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px;
+    font-size: 13px; color: var(--ink-dim); }
+  .quick-q .pills label { padding: 5px 12px; font-size: 13px; }
   .form-note { font-size: 13px; color: var(--ink-dim); margin-top: 12px; max-width: 52ch; }
 
   /* ---------- morning scan panel (hero right) ---------- */
@@ -378,15 +383,21 @@
 
   <div class="hero">
     <div>
-      <div class="eyebrow">Jobsuche in Deutschland für internationale Fachkräfte und Studierende</div>
+      <div class="eyebrow">Ehrliche Job-Matches für alle in Deutschland</div>
       <h1>Schluss mit Bewerbungen, die <em>nie eine Chance hatten.</em></h1>
-      <p class="sub">Career Sentinel geht jeden Morgen die neuen Stellenanzeigen durch und prüft jede einzelne: Passt sie zu <strong>deinem</strong> Deutsch, deinem Aufenthaltstitel und deinen Sprachen? Du bekommst nur die, die sich lohnen.</p>
+      <p class="sub">Career Sentinel geht jeden Morgen die neuen Stellenanzeigen durch und prüft jede einzelne: Passt sie zu <strong>deiner</strong> Erfahrung und deinen Fähigkeiten? Ist Deutsch nicht deine Muttersprache, prüft es auch, wie viel Deutsch die Anzeige wirklich verlangt und ob sie zu deinem Aufenthaltstitel passt. Du bekommst nur die, die sich lohnen.</p>
       <form class="waitlist" action="https://app.careersentinel.de/waitlist" method="POST">
         <input type="hidden" name="lang" value="de">
         <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <input type="hidden" name="source" value="hero-quick-join">
         <input type="email" name="email" required placeholder="du@email.de" aria-label="Email address">
         <button type="submit">Auf die Warteliste</button>
+        <div class="quick-q"><span>Ist Deutsch deine Muttersprache?</span>
+          <div class="pills" role="group" aria-label="Ist Deutsch deine Muttersprache?">
+            <label><input type="radio" name="german_level" value="native">Ja</label>
+            <label><input type="radio" name="german_level" value="not native">Nein</label>
+          </div>
+        </div>
       </form>
       <p class="form-note">Kostenlos während der Beta. Du bekommst eine E-Mail, sobald dein Platz frei ist. <a href="#profile">Erzähl mir mehr über dich ↓</a> · <a href="../datenschutz.html">Datenschutz</a></p>
       <p class="form-note consent">Mit dem Eintrag in die Warteliste erklärst du dich damit einverstanden, dass wir deine Angaben speichern und dir E-Mails zu Career Sentinel schicken. Du kannst jederzeit mit einem Klick widerrufen.</p>
@@ -401,13 +412,14 @@
         <button type="button" data-level="b1">B1</button>
         <button type="button" data-level="b2">B2</button>
         <button type="button" data-level="c1">C1</button>
+        <button type="button" data-level="native">Muttersprache</button>
       </div>
       <div class="stack">
         <div class="vcard lift" id="card-sdr" style="order:1">
           <div class="ring ok" style="--p:88"><div class="score">88%</div></div>
           <div>
             <div class="job">Sales Development Rep · remote, Deutschland</div>
-            <div class="verdict">Firmensprache Englisch. Arbeitgeber mit Visa-Erfahrung. Heute noch bewerben.</div>
+            <div class="verdict">Firmensprache Englisch. Stellt auch Leute mit Visum ein. Heute noch bewerben.</div>
           </div>
         </div>
         <div class="vcard" id="card-field" style="order:2">
@@ -561,6 +573,7 @@
           <label><input type="radio" name="german_level" value="B1">B1</label>
           <label><input type="radio" name="german_level" value="B2">B2</label>
           <label><input type="radio" name="german_level" value="C1+">C1+</label>
+          <label><input type="radio" name="german_level" value="native">Muttersprache</label>
         </div>
       </div>
       <div>
@@ -635,7 +648,7 @@
       trap:  [35, "Sitzt in Wirklichkeit im Ausland. Du müsstest Deutschland verlassen. Aussortiert."]
     },
     a2: {
-      sdr:   [88, "Firmensprache Englisch. Arbeitgeber mit Visa-Erfahrung. Heute noch bewerben."],
+      sdr:   [88, "Firmensprache Englisch. Stellt auch Leute mit Visum ein. Heute noch bewerben."],
       field: [67, "Jeden Tag Termine bei deutschsprachigen Händlern. Mit A2 schwierig. Du entscheidest."],
       kam:   [0,  "Verlangt verhandlungssicheres Deutsch (C1). Aussortiert, bevor du einen Abend dafür opferst."],
       trap:  [35, "Sitzt in Wirklichkeit im Ausland. Du müsstest Deutschland verlassen. Aussortiert."]
@@ -657,6 +670,12 @@
       field: [88, "Die Sprache ist kein Thema mehr. Jetzt zählen nur deine Skills, und die passen. Bewerben."],
       kam:   [86, "C1 hast du. Deine Erfahrung passt gut. Bewerben."],
       trap:  [35, "Sitzt in Wirklichkeit im Ausland. Daran ändert auch C1 nichts. Aussortiert."]
+    },
+    native: {
+      sdr:   [84, "Passt zu deiner Erfahrung. Englischsprachiges Team, und mit deinem Deutsch kommen die DACH-Kunden dazu. Bewerben."],
+      field: [88, "Händlertermine auf Deutsch sind für dich ein Heimspiel. Die Skills passen. Bewerben."],
+      kam:   [62, "Deutsch ist kein Thema. Die Anzeige will 8+ Jahre Erfahrung, du hast 6. Ein ehrliches Vielleicht, du entscheidest."],
+      trap:  [35, "Sitzt in Wirklichkeit im Ausland, nicht in Deutschland. Aussortiert."]
     }
   };
   var picker = document.getElementById("level-picker");
