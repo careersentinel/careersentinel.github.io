@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Career Sentinel</title>
 <meta name="description" content="Every morning, Career Sentinel scans the German job market and scores each posting for your languages, your visa situation and your level of German. Built in Stuttgart, for job seekers.">
-<meta property="og:title" content="Career Sentinel — the German job market, working for you">
+<meta property="og:title" content="Career Sentinel: the German job market, working for you">
 <meta property="og:description" content="Daily scans of the German job market, honestly scored for every job seeker: language reality, visa fit, no relocation traps. Join the waitlist.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://careersentinel.de/">
@@ -55,6 +55,9 @@
     line-height: 1.6;
   }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 520px) { .wrap { padding: 0 16px; } }
+  svg.i { width: 24px; height: 24px; fill: none; stroke: currentColor;
+    stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
   /* ---------- header ---------- */
   header {
@@ -72,22 +75,22 @@
 
   /* ---------- hero ---------- */
   .hero {
-    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px;
-    align-items: center; padding: 48px 0 72px;
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px;
+    align-items: center; padding: 40px 0 72px;
   }
-  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 40px; } }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 16px; } }
   .eyebrow {
     font-family: var(--mono); font-size: 13px; color: var(--ink-dim);
     letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px;
   }
   h1 {
-    font-family: var(--display); font-weight: 800; font-size: clamp(34px, 5vw, 52px);
-    line-height: 1.06; letter-spacing: -0.02em; text-wrap: balance;
+    font-family: var(--display); font-weight: 800; font-size: clamp(34px, 5.2vw, 56px);
+    line-height: 1.04; letter-spacing: -0.025em; text-wrap: balance;
     margin-bottom: 20px;
   }
   h1 em { font-style: normal; color: var(--accent); }
   .sub {
-    font-size: 18px; color: var(--ink-dim); max-width: 46ch; margin-bottom: 32px;
+    font-size: 18px; color: var(--ink-dim); max-width: 44ch; margin-bottom: 28px;
   }
   .sub strong { color: var(--ink); font-weight: 600; }
 
@@ -108,122 +111,194 @@
     white-space: nowrap;
   }
   form.waitlist button:hover { filter: brightness(1.08); }
-  .form-note { font-size: 13px; color: var(--ink-dim); margin-top: 12px; }
+  .form-note { font-size: 13px; color: var(--ink-dim); margin-top: 12px; max-width: 52ch; }
 
-  /* ---------- verdict stack (hero right) ---------- */
-  .stack { display: flex; flex-direction: column; gap: 12px; }
-  .stack-label {
-    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
-    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px;
+  /* ---------- morning scan panel (hero right) ---------- */
+  .panel {
+    background: #00253A; border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
   }
+  .panel-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    padding: 2px 4px 12px; border-bottom: 1px solid var(--line); margin-bottom: 14px;
+  }
+  .panel-bar .live { display: inline-flex; align-items: center; gap: 6px; }
+  .panel-bar .live::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--good);
+  }
+  .stack { display: flex; flex-direction: column; gap: 10px; }
   .vcard {
     background: var(--surface); border: 1px solid var(--line);
-    border-radius: 8px; padding: 14px 16px;
-    display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: start;
+    border-radius: 10px; padding: 12px 14px;
+    display: grid; grid-template-columns: 58px 1fr; gap: 14px; align-items: center;
   }
-  .vcard .score {
-    font-family: var(--mono); font-weight: 500; font-size: 19px;
-    padding-top: 1px; text-align: right;
+  .ring {
+    --p: 0; --c: var(--good);
+    width: 58px; height: 58px; border-radius: 50%;
+    background: conic-gradient(var(--c) calc(var(--p) * 1%), rgba(255,255,255,0.1) 0);
+    display: grid; place-items: center;
+    transition: --p 0.4s ease;
   }
-  .score.ok { color: var(--good); }
-  .score.warn { color: var(--warn); }
-  .score.no { color: var(--reject); }
-  .vcard .job { font-weight: 600; font-size: 15px; line-height: 1.35; }
-  .vcard .verdict {
-    font-size: 13.5px; color: var(--ink-dim); margin-top: 3px; line-height: 1.5;
+  .ring .score {
+    width: 46px; height: 46px; border-radius: 50%; background: var(--surface);
+    display: grid; place-items: center;
+    font-family: var(--mono); font-weight: 500; font-size: 14px; color: var(--c);
   }
+  .vcard.lift .ring .score { background: var(--surface-2); }
+  .ok { --c: var(--good); } .warn { --c: var(--warn); } .no { --c: var(--reject); }
+  .vcard .job { font-weight: 600; font-size: 14.5px; line-height: 1.35; }
+  .vcard .verdict { font-size: 13px; color: var(--ink-dim); margin-top: 3px; line-height: 1.45; }
   .vcard.lift { border-color: var(--accent); background: var(--surface-2); }
+
+  .level-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .level-picker .lp-label {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
+    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 4px;
+  }
+  .level-picker button {
+    font: 500 13px var(--mono); cursor: pointer;
+    background: var(--night); color: var(--ink-dim);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+  }
+  .level-picker button:hover { border-color: var(--accent); }
+  .level-picker button[aria-pressed="true"] {
+    border-color: var(--accent); color: var(--ink);
+    background: rgba(66, 139, 171, 0.22);
+  }
+  .level-picker button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .panel-note { font-size: 12px; color: var(--ink-dim); margin-top: 12px; padding: 0 4px; }
 
   /* ---------- proof strip ---------- */
   .proof {
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-    padding: 26px 0;
+    background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 40px 0;
   }
   .proof-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
   }
-  @media (max-width: 720px) { .proof-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .proof-grid { grid-template-columns: 1fr; gap: 28px; } }
   .proof .num {
-    font-family: var(--mono); font-size: 26px; color: var(--ink);
-    font-variant-numeric: tabular-nums;
+    font-family: var(--display); font-weight: 800; font-size: clamp(40px, 5vw, 52px);
+    line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
   }
-  .proof .lbl { font-size: 13px; color: var(--ink-dim); margin-top: 2px; }
-  .proof-src { font-size: 12px; color: var(--ink-dim); margin-top: 16px; font-family: var(--mono); }
+  .proof .num.red { color: var(--reject); }
+  .proof .lbl { font-size: 14px; color: var(--ink-dim); margin-top: 10px; max-width: 30ch; }
+  .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,0.12); margin-top: 14px; overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 86%; background: var(--reject); border-radius: 99px; }
+  .proof-src { font-size: 12px; color: var(--ink-dim); margin-top: 28px; font-family: var(--mono); }
 
   /* ---------- sections ---------- */
-  section { padding: 72px 0; }
+  section { padding: 88px 0; }
+  @media (max-width: 720px) { section { padding: 64px 0; } }
   h2 {
-    font-family: var(--display); font-weight: 800; font-size: clamp(26px, 3.4vw, 34px);
-    letter-spacing: -0.015em; line-height: 1.15; text-wrap: balance;
-    margin-bottom: 14px; max-width: 24ch;
+    font-family: var(--display); font-weight: 800; font-size: clamp(28px, 3.8vw, 40px);
+    letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance;
+    margin-bottom: 12px; max-width: 22ch;
   }
-  .lede { color: var(--ink-dim); max-width: 62ch; margin-bottom: 40px; }
-  .lede strong { color: var(--ink); }
+  .lede { color: var(--ink-dim); max-width: 52ch; margin-bottom: 44px; font-size: 17px; }
 
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: step; position: relative; }
   @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
   .step {
     background: var(--surface); border: 1px solid var(--line);
-    border-radius: 8px; padding: 24px;
+    border-radius: 12px; padding: 26px 24px; position: relative;
   }
-  .step .k {
-    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
-    letter-spacing: 0.08em; text-transform: uppercase;
+  .step .icon {
+    width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+    background: var(--night); border: 1px solid var(--line); color: var(--ink); margin-bottom: 18px;
   }
-  .step h3 { font-family: var(--display); font-weight: 600; font-size: 19px; margin: 10px 0 8px; }
-  .step p { font-size: 14.5px; color: var(--ink-dim); }
+  .step .icon svg.i { width: 26px; height: 26px; }
+  .step .n {
+    position: absolute; top: 22px; right: 22px;
+    font-family: var(--mono); font-size: 13px; color: var(--ink-dim);
+  }
+  .step h3 { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.25; margin-bottom: 6px; }
+  .step p { font-size: 15px; color: var(--ink-dim); }
   .step p strong { color: var(--ink); font-weight: 600; }
-
-  /* ---------- truth section ---------- */
-  .truth { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-  @media (max-width: 860px) { .truth { grid-template-columns: 1fr; } }
-  .truth-list { display: flex; flex-direction: column; gap: 0; }
-  .truth-row {
-    display: grid; grid-template-columns: 22px 1fr; gap: 14px;
-    padding: 18px 0; border-bottom: 1px solid var(--line);
+  @media (max-width: 820px) {
+    .step { display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; padding: 20px; }
+    .step .icon { grid-row: span 2; margin: 0; }
+    .step h3 { font-size: 18px; padding-right: 16px; }
   }
-  .truth-row:last-child { border-bottom: 0; }
-  .truth-row .mark { font-family: var(--mono); font-size: 15px; padding-top: 2px; }
-  .mark.ok { color: var(--good); } .mark.no { color: var(--reject); }
-  .truth-row b { display: block; font-size: 15px; margin-bottom: 2px; }
-  .truth-row span { font-size: 14px; color: var(--ink-dim); }
 
-  .terminal {
-    background: #00202E; border: 1px solid var(--line); border-radius: 8px;
-    font-family: var(--mono); font-size: 13px; line-height: 1.75;
-    padding: 20px; overflow-x: auto; white-space: pre; color: var(--ink-dim);
+  /* small print: ad vs verdict */
+  .reveal {
+    display: grid; grid-template-columns: 1fr 56px 1fr; align-items: center; gap: 8px;
+    margin-bottom: 56px;
   }
-  .terminal .g { color: var(--good); }
-  .terminal .r { color: var(--reject); }
-  .terminal .y { color: var(--warn); }
-  .terminal .w { color: var(--ink); }
+  @media (max-width: 820px) { .reveal { grid-template-columns: 1fr; gap: 12px; } }
+  .ad {
+    background: #F4F8FA; color: #1F2B33; border-radius: 12px; padding: 22px 22px 18px;
+    font-size: 14px; line-height: 1.55; box-shadow: 0 18px 44px rgba(0,0,0,0.3);
+  }
+  .ad .tag {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: #4C6472; margin-bottom: 8px;
+  }
+  .ad .t { font-weight: 700; font-size: 16px; color: #0B1A22; }
+  .ad .meta { color: #4C6472; font-size: 13px; margin-bottom: 12px; }
+  .ad ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .ad li::before { content: "· "; color: #7A8F9B; }
+  .ad .fade { color: #7A8F9B; }
+  .ad mark {
+    background: rgba(255, 148, 120, 0.35); color: #0B1A22; padding: 1px 3px; border-radius: 3px;
+    box-shadow: inset 0 -2px 0 #E0583A;
+  }
+  .arrow { display: grid; place-items: center; color: var(--accent); }
+  .arrow svg.i { width: 34px; height: 34px; }
+  @media (max-width: 820px) { .arrow svg.i { transform: rotate(90deg); } }
+  .reveal .vcard { padding: 18px; grid-template-columns: 72px 1fr; }
+  .reveal .ring { width: 72px; height: 72px; }
+  .reveal .ring .score { width: 58px; height: 58px; font-size: 17px; }
+  .reveal .vcard .job { font-size: 16px; }
+  .reveal .vcard .verdict { font-size: 14.5px; }
+  .reveal-cap { font-size: 12px; color: var(--ink-dim); font-family: var(--mono); margin-top: 10px; }
+
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 960px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .tiles { grid-template-columns: 1fr; } }
+  .tile {
+    border: 1px solid var(--line); border-radius: 12px; padding: 22px 20px;
+    background: linear-gradient(180deg, rgba(1,72,101,0.6), rgba(1,72,101,0.15));
+  }
+  .tile .ti {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 14px;
+  }
+  .tile .ti.no { background: rgba(255,148,120,0.14); color: var(--reject); }
+  .tile .ti.ok { background: rgba(55,214,127,0.14); color: var(--good); }
+  .tile b { display: block; font-size: 16px; margin-bottom: 4px; }
+  .tile span { font-size: 14px; color: var(--ink-dim); line-height: 1.5; display: block; }
 
   /* ---------- founder ---------- */
   .founder {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-    padding: 36px; display: grid; grid-template-columns: auto 1fr; gap: 28px;
-    align-items: start; max-width: 780px;
+    display: grid; grid-template-columns: auto 1fr; gap: 24px;
+    align-items: start; max-width: 720px; margin: 0 auto;
   }
-  @media (max-width: 640px) { .founder { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .founder { grid-template-columns: 1fr; gap: 16px; } }
   .founder .avatar {
     width: 64px; height: 64px; border-radius: 50%;
     background: var(--signal); color: var(--on-signal);
-    display: grid; place-items: center;
+    display: grid; place-items: center; border: 2px solid var(--accent);
     font-family: var(--display); font-weight: 800; font-size: 24px;
   }
-  .founder p { font-size: 15.5px; color: var(--ink-dim); }
-  .founder p + p { margin-top: 12px; }
-  .founder p strong { color: var(--ink); }
-  .founder .sig { font-family: var(--mono); font-size: 13px; color: var(--ink-dim); margin-top: 16px; }
+  .founder blockquote {
+    font-family: var(--display); font-weight: 600; font-size: clamp(21px, 2.6vw, 26px);
+    line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 14px; text-wrap: pretty;
+  }
+  .founder p { font-size: 16px; color: var(--ink-dim); }
+  .founder .sig { font-family: var(--mono); font-size: 13px; color: var(--ink-dim); margin-top: 14px; }
 
   /* ---------- final CTA + footer ---------- */
-  .final { padding: 84px 0; }
+  .final { padding: 88px 0; background: linear-gradient(180deg, var(--night), #003A52); border-top: 1px solid var(--line); }
   .final h2, .final > .wrap > .lede { text-align: center; margin-left: auto; margin-right: auto; }
   .signup {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
     padding: 32px; max-width: 720px; margin: 0 auto;
     display: flex; flex-direction: column; gap: 24px;
   }
+  @media (max-width: 520px) { .signup { padding: 22px 18px; } }
   .field-label {
     font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
     letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px;
@@ -239,7 +314,7 @@
   .pills input { position: absolute; opacity: 0; pointer-events: none; }
   .pills label:has(input:checked) {
     border-color: var(--accent); color: var(--ink);
-    background: rgba(66, 139, 171, 0.16);
+    background: rgba(66, 139, 171, 0.22);
   }
   .pills label:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
   .signup input[type="text"], .signup input[type="email"] {
@@ -249,7 +324,7 @@
   }
   .signup input::placeholder { color: var(--ink-dim); }
   .signup input:focus { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .signup .submit-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .signup .submit-row { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
   .signup button {
     background: var(--signal); color: var(--on-signal); border: 0; cursor: pointer;
     font: 600 15px var(--body); padding: 14px 26px; border-radius: 6px;
@@ -266,29 +341,12 @@
   a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 2px; }
   a:hover { color: var(--ink); }
 
-  /* ---------- interactivity (JS-gated; page fully readable without) ---------- */
-  .level-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-  .level-picker .lp-label {
-    font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
-    letter-spacing: 0.06em; text-transform: uppercase; margin-right: 2px;
-  }
-  .level-picker button {
-    font: 500 13px var(--mono); cursor: pointer;
-    background: var(--night); color: var(--ink-dim);
-    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
-  }
-  .level-picker button:hover { border-color: var(--accent); }
-  .level-picker button[aria-pressed="true"] {
-    border-color: var(--accent); color: var(--ink);
-    background: rgba(66, 139, 171, 0.16);
-  }
-  .level-picker button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  html.js .stack { display: flex; flex-direction: column; }
+  /* ---------- reveals (JS-gated; page fully readable without) ---------- */
+  @property --p { syntax: "<number>"; inherits: true; initial-value: 0; }
   @media (prefers-reduced-motion: no-preference) {
-    html.js .vcard, html.js .step { opacity: 0; transform: translateY(14px);
+    html.js .rv { opacity: 0; transform: translateY(14px);
       transition: opacity 0.5s ease, transform 0.5s ease; }
-    html.js .vcard.in, html.js .step.in { opacity: 1; transform: none; }
-    html.js .vcard { transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease, background 0.3s ease; }
+    html.js .rv.in { opacity: 1; transform: none; }
   }
   /* Honeypot. The forms carry no JavaScript and no CAPTCHA, so a field
      that humans never see and bots fill in anyway is the defence. Kept
@@ -320,9 +378,9 @@
 
   <div class="hero">
     <div>
-      <div class="eyebrow">// Job hunting in Germany, for internationals and students</div>
-      <h1>Find the German jobs that <em>actually want you</em> — before you waste an application.</h1>
-      <p class="sub">Career Sentinel scans the German job market every morning and scores every posting for <strong>your</strong> reality: your languages, your visa situation, your level of German. Full-time roles, or Werkstudent jobs alongside your degree. No fluent-German dead ends. No jobs that quietly relocate you abroad.</p>
+      <div class="eyebrow">Job hunting in Germany, for internationals and students</div>
+      <h1>Stop applying to jobs you were <em>never going to get.</em></h1>
+      <p class="sub">Every morning Career Sentinel reads the new German job ads and scores each one for <strong>your</strong> German, your visa and your languages. You only see the ones worth your time.</p>
       <form class="waitlist" action="https://app.careersentinel.de/waitlist" method="POST">
         <input type="hidden" name="lang" value="en">
         <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
@@ -330,48 +388,51 @@
         <input type="email" name="email" required placeholder="you@email.com" aria-label="Email address">
         <button type="submit">Join the waitlist</button>
       </form>
-      <p class="form-note">Free while in beta. No spam — one email when your spot opens. Want better matches from day one? <a href="#profile">Tell us your situation ↓</a> · <a href="datenschutz.html">Privacy</a></p>
-        <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
+      <p class="form-note">Free while in beta. One email when your spot opens. <a href="#profile">Tell me your situation ↓</a> · <a href="datenschutz.html">Privacy</a></p>
+      <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
     </div>
 
-    <div class="stack" aria-label="Example scored jobs">
-      <div class="stack-label">Example morning scan — scored for you</div>
+    <div class="panel rv" aria-label="Example scored jobs">
+      <div class="panel-bar"><span class="live">Morning scan · 07:55</span><span>example</span></div>
       <div class="level-picker" id="level-picker" hidden>
-        <span class="lp-label">Your German:</span>
+        <span class="lp-label">Your German</span>
         <button type="button" data-level="none">None</button>
         <button type="button" data-level="a2" aria-pressed="true">A2</button>
         <button type="button" data-level="b1">B1</button>
         <button type="button" data-level="b2">B2</button>
         <button type="button" data-level="c1">C1</button>
       </div>
-      <div class="vcard lift" id="card-sdr" style="order:1">
-        <div class="score ok">88%</div>
-        <div>
-          <div class="job">Sales Development Representative · remote, Germany</div>
-          <div class="verdict">English is the company language. Visa-friendly employer. Your 3 years of B2B experience fit the profile. Apply today.</div>
+      <div class="stack">
+        <div class="vcard lift" id="card-sdr" style="order:1">
+          <div class="ring ok" style="--p:88"><div class="score">88%</div></div>
+          <div>
+            <div class="job">Sales Development Rep · remote, Germany</div>
+            <div class="verdict">English company language. Visa-friendly employer. Apply today.</div>
+          </div>
+        </div>
+        <div class="vcard" id="card-field" style="order:2">
+          <div class="ring warn" style="--p:67"><div class="score">67%</div></div>
+          <div>
+            <div class="job">Field Sales · payments</div>
+            <div class="verdict">Daily visits to German-speaking shops. Tough at A2. Your call.</div>
+          </div>
+        </div>
+        <div class="vcard" id="card-trap" style="order:3">
+          <div class="ring no" style="--p:35"><div class="score">35%</div></div>
+          <div>
+            <div class="job">Customer Support · "German market"</div>
+            <div class="verdict">Actually based abroad. Would end your residency track. Skipped.</div>
+          </div>
+        </div>
+        <div class="vcard" id="card-kam" style="order:4">
+          <div class="ring no" style="--p:0"><div class="score">0%</div></div>
+          <div>
+            <div class="job">Key Account Manager · München</div>
+            <div class="verdict">Needs C1 German. Filtered out before you waste an evening.</div>
+          </div>
         </div>
       </div>
-      <div class="vcard" id="card-field" style="order:2">
-        <div class="score warn">67%</div>
-        <div>
-          <div class="job">Sales Representative · payments, field sales</div>
-          <div class="verdict">Skills match, but daily visits to German-speaking merchants. Realistic with B1+, tough at A2. Your call.</div>
-        </div>
-      </div>
-      <div class="vcard" id="card-kam" style="order:3">
-        <div class="score no">0%</div>
-        <div>
-          <div class="job">Key Account Manager · München</div>
-          <div class="verdict">Requires C1 German ("verhandlungssicher"). Filtered out so you never waste an evening on it.</div>
-        </div>
-      </div>
-      <div class="vcard" id="card-trap" style="order:4">
-        <div class="score no">35%</div>
-        <div>
-          <div class="job">Customer Support · "German market"</div>
-          <div class="verdict">Fine print: the role is actually based abroad. Leaving Germany would end your residency track. Skipped.</div>
-        </div>
-      </div>
+      <p class="panel-note" id="panel-note" hidden>Tap a level and watch the scores change.</p>
     </div>
   </div>
 </div>
@@ -379,101 +440,101 @@
 <div class="proof">
   <div class="wrap">
     <div class="proof-grid">
-      <div><div class="num">14,000+</div><div class="lbl">postings screened, and more every morning</div></div>
-      <div><div class="num">86%</div><div class="lbl">of the turned-down jobs failed partly on German. Only 1 in 9 of those ads named a level.</div></div>
-      <div><div class="num">214</div><div class="lbl">matches that cleared the bar (score 70+)</div></div>
+      <div class="rv"><div class="num">14,000+</div><div class="lbl">job ads screened so far, and more every morning</div></div>
+      <div class="rv"><div class="num red">86%</div><div class="bar" aria-hidden="true"><span></span></div><div class="lbl">of the rejected jobs failed partly on German. Only 1 in 9 of those ads said which level.</div></div>
+      <div class="rv"><div class="num">214</div><div class="lbl">real matches that scored 70 or higher</div></div>
     </div>
-    <div class="proof-src">Real numbers from the founder's own job hunt, 6 September to 30 October 2026. It's still running.</div>
+    <div class="proof-src">Real numbers from my own job hunt, 6 September to 30 October 2026. Still running.</div>
   </div>
 </div>
 
 <div class="wrap">
   <section>
-    <h2>Every morning, while you sleep</h2>
-    <p class="lede">One scan across the German job market — official listings, startup job boards and the English-language corners most people never find — fresh postings only, scored and prepared before your coffee.</p>
+    <h2>How it works</h2>
+    <p class="lede">Three steps. The machine does the reading, you do the applying.</p>
     <div class="steps">
-      <div class="step">
-        <div class="k">07:55 — scan</div>
-        <h3>The market, filtered to reality</h3>
-        <p>Fresh 24-hour postings for your roles and cities. Duplicates collapsed. Postings that closed overnight removed. <strong>Priority to your region</strong> — Stuttgart before Somewhere.</p>
+      <div class="step rv">
+        <div class="icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 18v-6"/><path d="m9.5 14.5 2.5-2.5 2.5 2.5"/></svg></div>
+        <span class="n">1</span>
+        <h3>Upload your CV</h3>
+        <p>Add your German level, your city and the roles you want.</p>
       </div>
-      <div class="step">
-        <div class="k">08:20 — judge</div>
-        <h3>Scored like an honest friend</h3>
-        <p>Each job gets a match score built on <strong>your</strong> CV, your German level, and your visa situation — including the requirements the posting doesn't say out loud.</p>
+      <div class="step rv">
+        <div class="icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></div>
+        <span class="n">2</span>
+        <h3>Get matches every morning</h3>
+        <p>New jobs, each with a score and the <strong>reason</strong> behind it.</p>
       </div>
-      <div class="step">
-        <div class="k">08:40 — prepare</div>
-        <h3>Documents, ready to send</h3>
-        <p>For every high match: a CV tailored to that posting in your own design, a cover letter in the posting's language, and the direct application link — <strong>on your phone</strong>.</p>
+      <div class="step rv">
+        <div class="icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></div>
+        <span class="n">3</span>
+        <h3>Apply with documents ready</h3>
+        <p>A tailored CV and cover letter for each good match. <strong>You always press send.</strong></p>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="truth">
-      <div>
-        <h2>The judgment layer nobody else has</h2>
-        <p class="lede">Auto-apply tools blast 200 applications and call it progress. Recruiters can tell. Career Sentinel sends <strong>fewer, better</strong> — because it understands things generic tools don't:</p>
-        <div class="truth-list">
-          <div class="truth-row">
-            <div class="mark no">✗</div>
-            <div><b>"Fluent German" hidden between the lines</b>
-            <span>A German-market phone-support role needs B2+ even when the ad is in English. We score it honestly instead of letting you burn an application.</span></div>
-          </div>
-          <div class="truth-row">
-            <div class="mark no">✗</div>
-            <div><b>Jobs that end your residency</b>
-            <span>"German-speaking role!" — quietly based outside Germany. If you're building a life here, a relocation trap is worth 0%, whatever the salary.</span></div>
-          </div>
-          <div class="truth-row">
-            <div class="mark ok">✓</div>
-            <div><b>Your other languages as an asset</b>
-            <span>Arabic, Turkish, Polish, French — support and market roles actively want them. We hunt those postings for you.</span></div>
-          </div>
-          <div class="truth-row">
-            <div class="mark ok">✓</div>
-            <div><b>Working student jobs, searched the way they are posted</b>
-            <span>Searching "Marketing Manager" as a student returns full-time roles you cannot take. We search <em>Werkstudent</em> and <em>Working Student</em> postings instead, in German and in English, and score them for the roughly 20 hours a week a semester leaves you.</span></div>
-          </div>
-          <div class="truth-row">
-            <div class="mark ok">✓</div>
-            <div><b>Three tracks, never confused</b>
-            <span>Career roles that secure your future, honest income for the months in between, and working student jobs alongside a degree. Each one scored on its own terms.</span></div>
-          </div>
-          <div class="truth-row">
-            <div class="mark ok">✓</div>
-            <div><b>Already at B2 or C1? Even more doors</b>
-            <span>Stronger German multiplies your matches — it doesn't mean the market reads you fairly. We surface everything you qualify for, with documents ready in the posting's language.</span></div>
+  <section style="padding-top:0">
+    <h2>It reads the small print for you</h2>
+    <p class="lede">Lots of "English" ads hide a German requirement in the last lines. Most people stop reading before that.</p>
+
+    <div class="reveal">
+      <div class="ad rv" aria-label="Example job ad">
+        <div class="tag">Example job ad</div>
+        <div class="t">Customer Success Manager (m/w/d)</div>
+        <div class="meta">Berlin · English-speaking team</div>
+        <ul>
+          <li>Our team language is English</li>
+          <li>2+ years in customer success or account management</li>
+          <li>You love working with SaaS customers</li>
+          <li class="fade">Flexible hours, gym membership, team events</li>
+          <li><mark>Sehr gute Deutschkenntnisse für unsere Kunden in der DACH-Region</mark></li>
+        </ul>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></div>
+      <div class="rv">
+        <div class="vcard">
+          <div class="ring no" style="--p:22"><div class="score">22%</div></div>
+          <div>
+            <div class="job">Needs fluent German, in practice</div>
+            <div class="verdict">The team speaks English, but the customers speak German. Realistic from B2. Skipped for now, kept for later.</div>
           </div>
         </div>
+        <div class="reveal-cap">What you see in Career Sentinel</div>
       </div>
-      <div>
-        <div class="terminal"><span class="w">$ career-sentinel — morning report</span>
+    </div>
 
-<span class="g">🎯 88%</span>  SDR (Remote) — Deel
-       <span class="g">→ apply link + tailored CV ready</span>
-<span class="g">🎯 86%</span>  Customer Success — Bosch
-       <span class="g">→ Ludwigsburg, 20 min from you</span>
-<span class="y">·  67%</span>  Field Sales — payments
-       <span class="y">→ needs B1 German in practice</span>
-<span class="r">·   0%</span>  KAM München — C1 required
-<span class="r">·  35%</span>  "German support" — relocation trap
-
-<span class="w">258 screened · 2 worth your evening</span>
-<span class="w">documents prepared. go get them.</span></div>
+    <div class="tiles">
+      <div class="tile rv">
+        <div class="ti no"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></div>
+        <b>Hidden German</b>
+        <span>Finds the German level the ad doesn't say out loud.</span>
+      </div>
+      <div class="tile rv">
+        <div class="ti no"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><path d="m10 8 4 4M14 8l-4 4"/></svg></div>
+        <b>Relocation traps</b>
+        <span>Flags "German market" jobs that are really based abroad.</span>
+      </div>
+      <div class="tile rv">
+        <div class="ti ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+        <b>Your languages count</b>
+        <span>Arabic, Turkish, Polish, French. Some roles want exactly that.</span>
+      </div>
+      <div class="tile rv">
+        <div class="ti ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div>
+        <b>Student jobs</b>
+        <span><i>Werkstudent</i> (working student) jobs, searched in German and English.</span>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="founder">
+  <section style="padding-top:0">
+    <div class="founder rv">
       <div class="avatar">M</div>
       <div>
-        <p><strong>I built this because I am the customer.</strong> I'm Maher — a sales professional and an international living in Germany, with a German Master's degree, native English and Arabic, and A2 German that I'm working on every week.</p>
-        <p>The job boards showed me thousands of jobs I could never get, and buried the ones I could. So I built a machine that reads the market the way I have to: <strong>Which jobs are really open to internationals? Which secure a residence permit? Which are traps?</strong> It found my matches, wrote my applications, and it runs every morning while I sleep.</p>
-        <p>Now I'm opening it up to people in the same boat. If that's you — get on the list.</p>
-        <p class="sig">— Maher, Stuttgart</p>
+        <blockquote>"I built this because I'm the customer."</blockquote>
+        <p>I'm Maher, an international in Stuttgart with A2 German. Job boards showed me thousands of jobs I could never get and buried the ones I could. So I built the filter I needed. Now it's open to anyone in the same boat.</p>
+        <p class="sig">Maher, Stuttgart</p>
       </div>
     </div>
   </section>
@@ -481,8 +542,8 @@
 
 <div class="final" id="profile">
   <div class="wrap">
-    <h2>The German job market, working for you for once.</h2>
-    <p class="lede">Beta opens soon, free for the first wave. Tell us your situation and your first morning scan is matched to you from day one.</p>
+    <h2>Get your first morning scan</h2>
+    <p class="lede">Free for the first wave. Tell me your situation and your matches fit you from day one.</p>
     <form class="signup" action="https://app.careersentinel.de/waitlist" method="POST">
         <input type="hidden" name="lang" value="en">
         <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
@@ -533,7 +594,7 @@
         </div>
       </div>
       <div>
-        <div class="field-label">Your situation <span class="opt">(optional — helps us prioritize people on a clock)</span></div>
+        <div class="field-label">Your situation <span class="opt">(optional, helps me prioritise people on a clock)</span></div>
         <div class="pills" role="group" aria-label="Visa situation">
           <label><input type="radio" name="situation" value="Chancenkarte / job-seeker visa">Chancenkarte / job-seeker</label>
           <label><input type="radio" name="situation" value="Student / graduate">Student / graduate</label>
@@ -548,7 +609,7 @@
       </div>
       <div class="submit-row">
         <button type="submit">Join the waitlist</button>
-        <p class="form-note">Free while in beta. Your answers only shape your matches — never shared. <a href="datenschutz.html">Privacy policy</a></p>
+        <p class="form-note">Free while in beta. Your answers only shape your matches, never shared. <a href="datenschutz.html">Privacy policy</a></p>
         <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
       </div>
     </form>
@@ -558,7 +619,7 @@
 <div class="wrap">
   <footer>
     <div>Career Sentinel<span style="color:var(--accent)">.</span> © 2026 · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></div>
-    <div class="fine">Not affiliated with LinkedIn, StepStone or Indeed. We prepare your applications and tell you the truth about your chances — you always press send. Ehrlich währt am längsten.</div>
+    <div class="fine">I prepare your applications and tell you the truth about your chances. You always press send. Ehrlich währt am längsten.</div>
   </footer>
 </div>
 <script>
@@ -568,47 +629,47 @@
   /* ---- interactive score demo ---- */
   var DEMO = {
     none: {
-      sdr:   [80, "English is the company language. Visa-friendly employer. English-first sales teams hire at every German level — your B2B experience carries this."],
-      field: [22, "Skills match, but daily visits to German-speaking merchants. Not realistic before A2–B1. Parked — resurfaces as your German grows."],
-      kam:   [0,  "Requires C1 German (“verhandlungssicher”). Filtered out so you never waste an evening on it."],
-      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. No German level fixes a relocation trap. Skipped."]
+      sdr:   [80, "English-first sales team. Hires at every German level. Your experience carries it."],
+      field: [22, "Daily visits to German-speaking shops. Not realistic yet. Comes back as your German grows."],
+      kam:   [0,  "Needs C1 German. Filtered out before you waste an evening."],
+      trap:  [35, "Actually based abroad. Would end your residency track. Skipped."]
     },
     a2: {
-      sdr:   [88, "English is the company language. Visa-friendly employer. Your 3 years of B2B experience fit the profile. Apply today."],
-      field: [67, "Skills match, but daily visits to German-speaking merchants. Realistic with B1+, tough at A2. Your call."],
-      kam:   [0,  "Requires C1 German (“verhandlungssicher”). Filtered out so you never waste an evening on it."],
-      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. Skipped."]
+      sdr:   [88, "English company language. Visa-friendly employer. Apply today."],
+      field: [67, "Daily visits to German-speaking shops. Tough at A2. Your call."],
+      kam:   [0,  "Needs C1 German. Filtered out before you waste an evening."],
+      trap:  [35, "Actually based abroad. Would end your residency track. Skipped."]
     },
     b1: {
-      sdr:   [90, "English company language, and your B1 covers the office small talk. Visa-friendly employer. Apply today."],
-      field: [76, "Daily merchant visits in German — realistic at B1 with a fast ramp. Worth a serious look."],
-      kam:   [0,  "Requires C1 (“verhandlungssicher”) — still a wall at B1. Filtered out so you never waste an evening."],
-      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. No German level fixes that. Skipped."]
+      sdr:   [90, "English company language, and B1 covers the small talk. Apply today."],
+      field: [76, "Shop visits in German. Realistic at B1. Worth a serious look."],
+      kam:   [0,  "Needs C1. Still a wall at B1. Filtered out."],
+      trap:  [35, "Actually based abroad. No German level fixes that. Skipped."]
     },
     b2: {
-      sdr:   [91, "English company language — and your German unlocks the DACH accounts too. Strong fit. Apply today."],
-      field: [84, "Your B2 handles the merchant visits. Skills match. Apply."],
-      kam:   [45, "Ad demands C1; a strong B2 sometimes survives the interview when the domain fit is excellent. Flagged as an honest maybe — your call."],
-      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. B2 doesn't fix a relocation trap. Skipped."]
+      sdr:   [91, "English company language, and your German opens the DACH accounts too. Apply today."],
+      field: [84, "Your B2 handles the shop visits. Skills match. Apply."],
+      kam:   [45, "Ad asks for C1. A strong B2 sometimes gets through. Honest maybe, your call."],
+      trap:  [35, "Actually based abroad. B2 doesn't fix that. Skipped."]
     },
     c1: {
-      sdr:   [92, "English company language, full DACH reach with your German. Top of this morning's stack. Apply today."],
-      field: [88, "Language wall gone — scored purely on skills fit now, and yours is strong. Apply."],
-      kam:   [86, "The C1 wall is behind you. Scored on experience fit — close match. Apply."],
-      trap:  [35, "Fine print: the role is actually based abroad. Leaving Germany would end your residency track. Even C1 doesn't fix a relocation trap. Skipped."]
+      sdr:   [92, "Full DACH reach with your German. Top of today's list. Apply."],
+      field: [88, "Language wall gone. Scored on skills now, and yours are strong. Apply."],
+      kam:   [86, "The C1 wall is behind you. Close match on experience. Apply."],
+      trap:  [35, "Actually based abroad. Even C1 doesn't fix that. Skipped."]
     }
   };
   var picker = document.getElementById("level-picker");
   if (picker) {
     picker.hidden = false;
+    document.getElementById("panel-note").hidden = false;
     picker.addEventListener("click", function (e) {
       var btn = e.target.closest("button[data-level]");
       if (!btn) return;
       picker.querySelectorAll("button").forEach(function (b) {
         b.setAttribute("aria-pressed", b === btn ? "true" : "false");
       });
-      var data = DEMO[btn.dataset.level];
-      applyLevel(data);
+      applyLevel(DEMO[btn.dataset.level]);
     });
     var urlLevel = new URLSearchParams(location.search).get("level");
     if (urlLevel && DEMO[urlLevel]) {
@@ -617,19 +678,20 @@
       });
       applyLevel(DEMO[urlLevel]);
     }
-    function applyLevel(data) {
-      var entries = Object.keys(data).map(function (k) {
-        return { card: document.getElementById("card-" + k), score: data[k][0], text: data[k][1] };
-      }).sort(function (a, b) { return b.score - a.score; });
-      entries.forEach(function (en, i) {
-        var scoreEl = en.card.querySelector(".score");
-        scoreEl.textContent = en.score + "%";
-        scoreEl.className = "score " + (en.score >= 75 ? "ok" : en.score >= 50 ? "warn" : "no");
-        en.card.querySelector(".verdict").textContent = en.text;
-        en.card.style.order = i + 1;
-        en.card.classList.toggle("lift", i === 0);
-      });
-    }
+  }
+  function applyLevel(data) {
+    var entries = Object.keys(data).map(function (k) {
+      return { card: document.getElementById("card-" + k), score: data[k][0], text: data[k][1] };
+    }).sort(function (a, b) { return b.score - a.score; });
+    entries.forEach(function (en, i) {
+      var ring = en.card.querySelector(".ring");
+      ring.querySelector(".score").textContent = en.score + "%";
+      ring.className = "ring " + (en.score >= 75 ? "ok" : en.score >= 50 ? "warn" : "no");
+      ring.style.setProperty("--p", en.score);
+      en.card.querySelector(".verdict").textContent = en.text;
+      en.card.style.order = i + 1;
+      en.card.classList.toggle("lift", i === 0);
+    });
   }
 
   /* ---- count-up proof numbers ---- */
@@ -668,6 +730,7 @@
   }
 
   /* ---- reveals ---- */
+  var items = document.querySelectorAll(".rv");
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) {
@@ -677,11 +740,11 @@
         io.unobserve(en.target);
       });
     }, { threshold: 0.15 });
-    document.querySelectorAll(".vcard, .step").forEach(function (el) { io.observe(el); });
+    items.forEach(function (el) { io.observe(el); });
     var proof = document.querySelector(".proof");
     if (proof) io.observe(proof);
   } else {
-    document.querySelectorAll(".vcard, .step").forEach(function (el) { el.classList.add("in"); });
+    items.forEach(function (el) { el.classList.add("in"); });
   }
 })();
 </script>
