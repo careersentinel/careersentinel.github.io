@@ -192,6 +192,7 @@
   .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,0.12); margin-top: 14px; overflow: hidden; }
   .bar span { display: block; height: 100%; width: 86%; background: var(--reject); border-radius: 99px; }
   .proof-src { font-size: 12px; color: var(--ink-dim); margin-top: 28px; font-family: var(--mono); }
+  .proof-grid.next { margin-top: 36px; padding-top: 36px; border-top: 1px solid var(--line); }
 
   /* ---------- sections ---------- */
   section { padding: 88px 0; }
@@ -457,6 +458,12 @@
       <div class="rv"><div class="num">214</div><div class="lbl">real matches that scored 70 or higher</div></div>
     </div>
     <div class="proof-src">Real numbers from my own job hunt, 6 September to 30 October 2026. Still running.</div>
+    <div class="proof-grid next">
+      <div class="rv"><div class="num">1 million</div><div class="lbl">job ads across Germany, searched for you every morning</div></div>
+      <div class="rv"><div class="num">1,600+</div><div class="lbl">company career pages read every morning, not just job sites</div></div>
+      <div class="rv"><div class="num">100</div><div class="lbl">best fits read in full for you, every morning</div></div>
+    </div>
+    <div class="proof-src">What Career Sentinel does for every user, as of November 2026.</div>
   </div>
 </div>
 
@@ -719,7 +726,7 @@
     if (counted) return; counted = true;
     document.querySelectorAll(".proof .num").forEach(function (el) {
       var raw = el.textContent, m = raw.match(/[\d,]+/);
-      if (!m) return;
+      if (!m || m[0] === "1") return;  /* "1 million" does not count up from 0 */
       var target = parseInt(m[0].replace(/,/g, ""), 10), start = null;
       function frame(t) {
         if (!start) start = t;
