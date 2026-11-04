@@ -72,6 +72,9 @@
   .made-in {
     font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
   }
+  .logo { white-space: nowrap; }
+  /* the CV check link and the language switch need the room on a phone */
+  @media (max-width: 520px) { .made-in .where { display: none; } }
 
   /* ---------- hero ---------- */
   .hero {
@@ -379,7 +382,7 @@
 <div class="wrap">
   <header>
     <a class="logo" href="#">Career Sentinel<span class="dot">.</span></a>
-    <div class="made-in"><a href="de/" style="text-decoration:none">DE</a> · built in Stuttgart</div>
+    <div class="made-in"><a href="https://app.careersentinel.de/check?lang=en" style="text-decoration:none">Free CV check</a> · <a href="de/" style="text-decoration:none">DE</a> <span class="where">· built in Stuttgart</span></div>
   </header>
 
   <div class="hero">
@@ -401,6 +404,7 @@
         </div>
       </form>
       <p class="form-note">Free while in beta. One email when your spot opens. <a href="#profile">Tell me your situation ↓</a> · <a href="datenschutz.html">Privacy</a></p>
+      <p class="form-note">Not ready to join? <a href="https://app.careersentinel.de/check?lang=en">Check your CV against German rules</a> first. Free, no account, and I don't keep your file.</p>
       <p class="form-note consent">By joining the waitlist you agree that we store what you enter here and email you about Career Sentinel. You can withdraw at any time with one click.</p>
     </div>
 
