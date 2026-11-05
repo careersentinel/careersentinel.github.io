@@ -427,6 +427,37 @@
   a { color: var(--ink-dim); text-decoration: underline; text-underline-offset: 2px; }
   a:hover { color: var(--ink); }
 
+  /* ---------- tap targets and the phone hero (5 November) ----------
+     Every control is at least 44px tall: before this, 41 of them on a
+     360px phone were 29 to 40px (the level chips, the form chips, the
+     logo). Links inside a sentence keep their line and get the 44px as
+     invisible padding, which inline padding adds to the tap area without
+     moving the text. */
+  .logo { display: inline-flex; align-items: center; min-height: 44px; }
+  .quick-q .pills label, .level-picker button, .pills label {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; min-width: 44px; }
+  /* With 44px chips the label takes its own line, so the six levels stay on one row. */
+  .level-picker .lp-label { flex-basis: 100%; margin: 0 0 2px; }
+  .form-note a, footer a { padding: 15px 0; }
+  footer a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 2px; }
+  /* On a phone the hero is one column, and the demo used to wait under
+     the form and three notes (914px down at 360px wide). Now: the pitch,
+     the form, the consent it needs, then the demo; the two optional
+     notes follow the demo. The left column's children join the hero's
+     flow so they can be ordered around the panel. */
+  @media (max-width: 860px) {
+    .hero { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+    .hero > div:first-child { display: contents; }
+    .hero .eyebrow { order: 1; } .hero h1 { order: 2; } .hero .sub { order: 3; }
+    .hero form.waitlist { order: 4; } .hero .form-note.consent { order: 5; }
+    .hero .panel { order: 6; margin: 28px 0 0; }
+    .hero .form-note:not(.consent) { order: 7; margin-top: 24px; }
+    .hero .form-note:not(.consent) + .form-note:not(.consent) { margin-top: 24px; }
+    .sub { font-size: 17px; margin-bottom: 24px; }
+  }
+  @media (max-width: 520px) { header { padding: 10px 0; } }
+
   /* ---------- reveals (JS-gated; page fully readable without) ---------- */
   @property --p { syntax: "<number>"; inherits: true; initial-value: 0; }
   @media (prefers-reduced-motion: no-preference) {
