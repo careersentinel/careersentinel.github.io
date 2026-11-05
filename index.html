@@ -73,6 +73,21 @@
     font-family: var(--mono); font-size: 12px; color: var(--ink-dim);
   }
   .logo { white-space: nowrap; }
+  .made-in { display: flex; align-items: center; }
+  .made-in a.t { display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; min-width: 44px; padding: 0 6px; text-decoration: none; }
+  .made-in .where { padding: 0 8px 0 2px; }
+  /* For people already invited: the app's front page is its sign-in page. */
+  .login { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; margin-left: 4px;
+    border: 1px solid var(--accent); border-radius: 999px; color: var(--ink);
+    font: 600 14px var(--body); text-decoration: none; white-space: nowrap; }
+  .login:hover { background: rgba(66, 139, 171, 0.22); color: var(--ink); }
+  .login:focus-visible, .made-in a.t:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  /* A phone has room for the logo, the language and Log in. The CV check
+     is linked under the hero form. */
+  @media (max-width: 520px) { .made-in .wide, .made-in a.t.wide { display: none; } }
+  /* "Anmelden" is wider than "Log in": at 360px the German header needs the room. */
+  @media (max-width: 400px) { .made-in a.t { padding: 0 2px; } .login { padding: 0 12px; margin-left: 2px; } }
   /* the CV check link and the language switch need the room on a phone */
   @media (max-width: 520px) { .made-in .where { display: none; } }
 
@@ -207,30 +222,92 @@
   }
   .lede { color: var(--ink-dim); max-width: 52ch; margin-bottom: 44px; font-size: 17px; }
 
-  /* steps */
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: step; position: relative; }
-  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
-  .step {
-    background: var(--surface); border: 1px solid var(--line);
-    border-radius: 12px; padding: 26px 24px; position: relative;
+  /* steps: three real app screens with invented data (the 5 November
+     mockup). Every class here is s- or shot- so nothing collides with the
+     hero's .ring, .vcard or .panel. From 861px the three columns share
+     row lines (subgrid), so the screens start level. */
+  .steps { display: flex; flex-direction: column; gap: 56px; }
+  .step-n { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); }
+  .step h3 { font-family: var(--display); font-weight: 700; font-size: 21px; line-height: 1.25; margin: 6px 0; }
+  .step p.step-p { font-size: 15px; color: var(--ink-dim); margin-bottom: 18px; }
+  .step p.step-p strong { color: var(--ink); font-weight: 600; }
+  @media (min-width: 861px) {
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); gap: 0 24px; }
+    .step { display: grid; grid-row: span 4; grid-template-rows: subgrid; }
+    .step > .shot { align-self: start; }
   }
-  .step .icon {
-    width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
-    background: var(--night); border: 1px solid var(--line); color: var(--ink); margin-bottom: 18px;
-  }
-  .step .icon svg.i { width: 26px; height: 26px; }
-  .step .n {
-    position: absolute; top: 22px; right: 22px;
-    font-family: var(--mono); font-size: 13px; color: var(--ink-dim);
-  }
-  .step h3 { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.25; margin-bottom: 6px; }
-  .step p { font-size: 15px; color: var(--ink-dim); }
-  .step p strong { color: var(--ink); font-weight: 600; }
-  @media (max-width: 820px) {
-    .step { display: grid; grid-template-columns: 52px 1fr; column-gap: 16px; padding: 20px; }
-    .step .icon { grid-row: span 2; margin: 0; }
-    .step h3 { font-size: 18px; padding-right: 16px; }
-  }
+  .shot { background: #00253A; border: 1px solid var(--line); border-radius: 14px; padding: 12px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); margin: 0; }
+  .shot-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-dim);
+    padding: 0 2px 10px; border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+  .shot-tag { border: 1px solid var(--line); border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+  .s-h { font-family: var(--display); font-weight: 800; font-size: 22px; line-height: 1.15; }
+  .s-sub { font-size: 13px; color: var(--ink-dim); margin: 2px 0 12px; }
+  .s-ring { --p: 0; --c: var(--good); flex: none; width: 44px; height: 44px; border-radius: 50%;
+    background: conic-gradient(var(--c) calc(var(--p) * 1%), rgba(255,255,255,0.1) 0);
+    display: grid; place-items: center; }
+  .s-ring b { width: 34px; height: 34px; border-radius: 50%; background: var(--surface);
+    display: grid; place-items: center; color: var(--c); font: 500 13px var(--mono); }
+  .s-ring.lg { width: 64px; height: 64px; } .s-ring.lg b { width: 52px; height: 52px; font-size: 16px; }
+  .s-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .s-big { display: flex; align-items: baseline; gap: 10px; }
+  .s-big b { font: 800 40px/1 var(--display); color: var(--good); }
+  .s-big span { font-weight: 600; }
+  .s-ledger { list-style: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 6px; }
+  .s-ledger li { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--ink-dim); }
+  .s-ledger .n { font-family: var(--mono); color: var(--ink); }
+  .s-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .s-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center;
+    min-height: 64px; padding: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .s-rt { display: flex; flex-direction: column; min-width: 0; }
+  .s-title { font-weight: 600; font-size: 14.5px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .s-co { font-size: 12.5px; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .s-verdict { font-size: 12.5px; margin-top: 2px; }
+  .s-good { color: var(--good); } .s-warn { color: var(--warn); }
+  .s-chev { color: var(--ink-dim); font-size: 20px; }
+  .s-head { display: flex; gap: 12px; align-items: center; }
+  .s-vword { font: 700 19px/1.2 var(--display); }
+  .s-muted { color: var(--ink-dim); font-size: 13px; }
+  .s-jt { font-weight: 700; font-size: 17px; line-height: 1.3; margin-top: 14px; }
+  .s-cefr { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--night); }
+  .s-cl { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; font-size: 13px; color: var(--ink-dim); }
+  .s-cl b { font-weight: 600; }
+  .s-scale { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-top: 10px; }
+  .s-scale span { height: 30px; border-radius: 6px; border: 1px solid var(--line); display: grid; place-items: center;
+    font: 500 11px/1 var(--mono); color: var(--ink-dim); }
+  .s-scale span.have { background: var(--ink); border: 2px solid var(--ink); color: var(--night);
+    box-shadow: 0 0 0 2px var(--night), 0 0 0 4px var(--good); }
+  .s-legend { display: flex; gap: 14px; margin-top: 8px; font-size: 12px; color: var(--ink-dim); }
+  .s-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .s-legend .h { background: var(--ink); } .s-legend .nd { border: 2px solid var(--ink-dim); }
+  .s-gl { font-family: var(--mono); font-size: 11px; line-height: 1; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-dim); margin: 14px 0 6px; }
+  .s-badge { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px;
+    font-size: 12px; line-height: 1.6; color: var(--ink-dim); }
+  .s-badge.good { color: var(--good); border-color: rgba(55, 214, 127, 0.45); }
+  .s-why { font-size: 13.5px; color: var(--ink-dim); margin-top: 14px; }
+  .s-why b { color: var(--ink); }
+  .s-cta { display: flex; align-items: center; justify-content: center; min-height: 48px; margin-top: 14px;
+    border-radius: 8px; background: var(--signal); color: var(--on-signal); font-weight: 600; font-size: 15px; }
+  .s-docs { position: relative; height: 292px; margin: 4px 2px 0; }
+  .s-sheet { position: absolute; top: 0; width: 66%; height: 262px; background: #F4F8FA; color: #002F43;
+    border-radius: 6px; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4); padding: 14px 13px;
+    font-size: 8px; line-height: 1.45; overflow: hidden; }
+  .s-sheet.cv { left: 0; transform: rotate(-3deg); }
+  .s-sheet.letter { right: 0; top: 26px; transform: rotate(2.5deg); }
+  .s-sheet .dt { font-size: 6.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #4C5A6B; }
+  .s-sheet .nm { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+  .s-sheet .hl { font-size: 8.5px; color: #01648E; font-weight: 600; }
+  .s-sheet .ct { font-size: 7px; color: #4C5A6B; }
+  .s-sheet .cvhead { border-bottom: 2px solid #01648E; padding-bottom: 6px; margin-bottom: 6px; }
+  .s-sheet .sh { font-size: 6.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #01648E; font-weight: 700; margin: 7px 0 3px; }
+  .s-sheet .en { font-weight: 600; font-size: 8px; }
+  .s-sheet .ln { height: 4px; border-radius: 2px; background: #CBD7DF; margin: 4px 0; }
+  .s-sheet .subj { font-weight: 700; font-size: 8px; margin: 8px 0 6px; }
+  .s-note { font-size: 13px; color: var(--ink-dim); margin-top: 8px; padding: 0 2px; }
+  .s-note b { color: var(--ink); font-weight: 600; }
 
   /* small print: ad vs verdict */
   .reveal {
@@ -382,7 +459,7 @@
 <div class="wrap">
   <header>
     <a class="logo" href="#">Career Sentinel<span class="dot">.</span></a>
-    <div class="made-in"><a href="https://app.careersentinel.de/check?lang=en" style="text-decoration:none">Free CV check</a> · <a href="de/" style="text-decoration:none">DE</a> <span class="where">· built in Stuttgart</span></div>
+    <div class="made-in"><a class="t wide" href="https://app.careersentinel.de/check?lang=en">Free CV check</a><span class="wide" aria-hidden="true">·</span><a class="t" href="de/">DE</a><span class="where">· built in Stuttgart</span><a class="login" href="https://app.careersentinel.de/">Log in</a></div>
   </header>
 
   <div class="hero">
@@ -473,25 +550,113 @@
 
 <div class="wrap">
   <section>
-    <h2 style="margin-bottom:44px">How it works</h2>
+    <h2>How it works</h2>
+    <p class="lede">Upload your CV once and tell it your German level. Then every morning looks like this. Real screens, made-up person.</p>
     <div class="steps">
       <div class="step rv">
-        <div class="icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 18v-6"/><path d="m9.5 14.5 2.5-2.5 2.5 2.5"/></svg></div>
-        <span class="n">1</span>
-        <h3>Upload your CV</h3>
-        <p>Add your German level, your city and the roles you want.</p>
+        <p class="step-n">1 · Every morning</p>
+        <h3>A short list, and what got left out</h3>
+        <p class="step-p">Only jobs at your bar make the list. The rest is counted, so you know it looked.</p>
+        <figure class="shot" aria-label="Example: the morning list in the app">
+          <div class="shot-bar"><span>app.careersentinel.de</span><span class="shot-tag">sample data</span></div>
+          <div lang="en">
+          <p class="s-h">Your matches</p>
+          <p class="s-sub">Customer success · Stuttgart, 50 km · last scan 07:12</p>
+          <div class="s-card">
+            <p class="s-big"><b>3</b><span>worth your evening</span></p>
+            <ul class="s-ledger">
+              <li><span>Jobs checked</span><span class="n">100</span></li>
+              <li><span>Needed more German than A2</span><span class="n">41</span></li>
+              <li><span>Under your 65% bar</span><span class="n">56</span></li>
+            </ul>
+          </div>
+          <div class="s-rows">
+            <div class="s-row">
+              <span class="s-ring" style="--p:84" role="img" aria-label="84% match"><b>84</b></span>
+              <span class="s-rt"><span class="s-title">Customer Success Manager (m/w/d)</span><span class="s-co">Muster Software GmbH · Stuttgart</span><span class="s-verdict s-good">Worth your evening</span></span>
+              <span class="s-chev" aria-hidden="true">›</span>
+            </div>
+            <div class="s-row">
+              <span class="s-ring" style="--p:77" role="img" aria-label="77% match"><b>77</b></span>
+              <span class="s-rt"><span class="s-title">Onboarding Specialist, English</span><span class="s-co">Probe Cloud GmbH · Remote</span><span class="s-verdict s-warn">Worth it, check the German first</span></span>
+              <span class="s-chev" aria-hidden="true">›</span>
+            </div>
+            <div class="s-row">
+              <span class="s-ring" style="--p:69" role="img" aria-label="69% match"><b>69</b></span>
+              <span class="s-rt"><span class="s-title">Support Team Lead</span><span class="s-co">Testhafen Logistik GmbH · Hamburg</span><span class="s-verdict s-warn">Worth it, but you'd have to move</span></span>
+              <span class="s-chev" aria-hidden="true">›</span>
+            </div>
+          </div>
+          </div>
+        </figure>
       </div>
       <div class="step rv">
-        <div class="icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></div>
-        <span class="n">2</span>
-        <h3>Get matches every morning</h3>
-        <p>New jobs, each with a score and the <strong>reason</strong> behind it.</p>
+        <p class="step-n">2 · Every job</p>
+        <h3>The German it really asks for</h3>
+        <p class="step-p">Your level next to the ad's, on the A1 to C2 scale. If it asks for more than you have, <strong>you see that first.</strong></p>
+        <figure class="shot" aria-label="Example: one job in the app">
+          <div class="shot-bar"><span>app.careersentinel.de</span><span class="shot-tag">sample data</span></div>
+          <div lang="en">
+          <div class="s-card">
+            <div class="s-head">
+              <span class="s-ring lg" style="--p:84" role="img" aria-label="84% match"><b>84%</b></span>
+              <div><p class="s-vword s-good">Worth your evening</p><p class="s-muted">1 fits you · 1 good to know</p></div>
+            </div>
+            <p class="s-jt">Customer Success Manager (m/w/d)</p>
+            <p class="s-muted">Muster Software GmbH · Stuttgart</p>
+            <div class="s-cefr">
+              <p class="s-cl"><span>German</span><b class="s-good">Ad asks for A2 · you have A2</b></p>
+              <div class="s-scale" aria-hidden="true"><span>A1</span><span class="have">A2</span><span>B1</span><span>B2</span><span>C1</span><span>C2</span></div>
+              <p class="s-legend" aria-hidden="true"><span><i class="h"></i>you</span><span><i class="nd"></i>the ad</span></p>
+            </div>
+            <p class="s-gl">Fits you</p>
+            <span class="s-badge good">Needs A2 German · you have A2</span>
+            <p class="s-gl">Good to know</p>
+            <span class="s-badge">Near you</span>
+            <p class="s-why"><b>Why 84%.</b> Three years onboarding SaaS customers is what they ask for. The team works in English, and A2 is enough for the office.</p>
+            <span class="s-cta">Write my CV + cover letter</span>
+          </div>
+          </div>
+        </figure>
       </div>
       <div class="step rv">
-        <div class="icon"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></div>
-        <span class="n">3</span>
-        <h3>Apply with documents ready</h3>
-        <p>A tailored CV and cover letter for each good match. <strong>You always press send.</strong></p>
+        <p class="step-n">3 · When you want it</p>
+        <h3>A CV and letter for that job</h3>
+        <p class="step-p">Written from your own CV. Nothing invented. <strong>You always press send.</strong></p>
+        <figure class="shot" aria-label="Example: the CV and cover letter for that job">
+          <div class="shot-bar"><span>Two PDFs for this job</span><span class="shot-tag">sample data</span></div>
+          <div class="s-docs" role="img" aria-label="A German-style CV and an English cover letter for Alex Beispiel, applying to Muster Software GmbH">
+            <div class="s-sheet cv" aria-hidden="true" lang="de">
+              <div class="cvhead">
+                <p class="dt">Lebenslauf</p>
+                <p class="nm">Alex Beispiel</p>
+                <p class="hl">Customer Success Manager</p>
+                <p class="ct">Stuttgart · alex@example.com</p>
+              </div>
+              <p class="sh">Kurzprofil</p>
+              <div class="ln" style="width:100%"></div><div class="ln" style="width:92%"></div><div class="ln" style="width:70%"></div>
+              <p class="sh">Berufserfahrung</p>
+              <p class="en">Onboarding Lead · Wolke Apps GmbH</p>
+              <div class="ln" style="width:96%"></div><div class="ln" style="width:84%"></div>
+              <p class="en">Support Specialist · Nimbus Desk</p>
+              <div class="ln" style="width:90%"></div><div class="ln" style="width:62%"></div>
+              <p class="sh">Sprachen</p>
+              <p class="en">Englisch C2 · Deutsch A2</p>
+            </div>
+            <div class="s-sheet letter" aria-hidden="true" lang="en">
+              <p class="en" style="font-size:9px">Alex Beispiel</p>
+              <p class="ct">Stuttgart · alex@example.com</p>
+              <p style="margin-top:10px">Muster Software GmbH<br>Stuttgart</p>
+              <p class="subj">Application: Customer Success Manager</p>
+              <p>Dear hiring team,</p>
+              <div class="ln" style="width:100%"></div><div class="ln" style="width:95%"></div><div class="ln" style="width:88%"></div>
+              <div class="ln" style="width:100%"></div><div class="ln" style="width:76%"></div>
+              <div class="ln" style="width:97%"></div><div class="ln" style="width:58%"></div>
+              <p style="margin-top:8px">Kind regards,<br>Alex Beispiel</p>
+            </div>
+          </div>
+          <p class="s-note"><b>Letter in English on purpose.</b> The ad is in German, but a German letter would promise more German than Alex speaks.</p>
+        </figure>
       </div>
     </div>
   </section>
