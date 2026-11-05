@@ -77,17 +77,10 @@
   .made-in a.t { display: inline-flex; align-items: center; justify-content: center;
     min-height: 44px; min-width: 44px; padding: 0 6px; text-decoration: none; }
   .made-in .where { padding: 0 8px 0 2px; }
-  /* For people already invited: the app's front page is its sign-in page. */
-  .login { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; margin-left: 4px;
-    border: 1px solid var(--accent); border-radius: 999px; color: var(--ink);
-    font: 600 14px var(--body); text-decoration: none; white-space: nowrap; }
-  .login:hover { background: rgba(66, 139, 171, 0.22); color: var(--ink); }
-  .login:focus-visible, .made-in a.t:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  /* A phone has room for the logo, the language and Log in. The CV check
-     is linked under the hero form. */
+  .made-in a.t:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  /* A phone has room for the logo and the language. The CV check is
+     linked under the hero form. */
   @media (max-width: 520px) { .made-in .wide, .made-in a.t.wide { display: none; } }
-  /* "Anmelden" is wider than "Log in": at 360px the German header needs the room. */
-  @media (max-width: 400px) { .made-in a.t { padding: 0 2px; } .login { padding: 0 12px; margin-left: 2px; } }
   /* the CV check link and the language switch need the room on a phone */
   @media (max-width: 520px) { .made-in .where { display: none; } }
 
@@ -490,7 +483,7 @@
 <div class="wrap">
   <header>
     <a class="logo" href="#">Career Sentinel<span class="dot">.</span></a>
-    <div class="made-in"><a class="t wide" href="https://app.careersentinel.de/check?lang=de">Kostenloser CV-Check</a><span class="wide" aria-hidden="true">·</span><a class="t" href="../">EN</a><span class="where">· gebaut in Stuttgart</span><a class="login" href="https://app.careersentinel.de/">Anmelden</a></div>
+    <div class="made-in"><a class="t wide" href="https://app.careersentinel.de/check?lang=de">Kostenloser CV-Check</a><span class="wide" aria-hidden="true">·</span><a class="t" href="../">EN</a><span class="where">· gebaut in Stuttgart</span></div>
   </header>
 
   <div class="hero">
@@ -589,7 +582,7 @@
         <h3>Eine kurze Liste, und was aussortiert wurde</h3>
         <p class="step-p">Auf die Liste kommen nur Jobs, die deine Messlatte erreichen. Der Rest wird mitgezählt, damit du siehst: Es wurde geschaut.</p>
         <figure class="shot" aria-label="Beispiel: die Morgenliste in der App">
-          <div class="shot-bar"><span>app.careersentinel.de</span><span class="shot-tag">Beispieldaten</span></div>
+          <div class="shot-bar"><span>Die App</span><span class="shot-tag">Beispieldaten</span></div>
           <div lang="en">
           <p class="s-h">Your matches</p>
           <p class="s-sub">Customer success · Stuttgart, 50 km · last scan 07:12</p>
@@ -626,7 +619,7 @@
         <h3>Wie viel Deutsch wirklich verlangt wird</h3>
         <p class="step-p">Dein Niveau neben dem der Anzeige, auf der Skala von A1 bis C2. Will die Anzeige mehr, als du hast, <strong>siehst du das zuerst.</strong></p>
         <figure class="shot" aria-label="Beispiel: ein Job in der App">
-          <div class="shot-bar"><span>app.careersentinel.de</span><span class="shot-tag">Beispieldaten</span></div>
+          <div class="shot-bar"><span>Die App</span><span class="shot-tag">Beispieldaten</span></div>
           <div lang="en">
           <div class="s-card">
             <div class="s-head">

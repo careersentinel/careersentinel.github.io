@@ -77,17 +77,10 @@
   .made-in a.t { display: inline-flex; align-items: center; justify-content: center;
     min-height: 44px; min-width: 44px; padding: 0 6px; text-decoration: none; }
   .made-in .where { padding: 0 8px 0 2px; }
-  /* For people already invited: the app's front page is its sign-in page. */
-  .login { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; margin-left: 4px;
-    border: 1px solid var(--accent); border-radius: 999px; color: var(--ink);
-    font: 600 14px var(--body); text-decoration: none; white-space: nowrap; }
-  .login:hover { background: rgba(66, 139, 171, 0.22); color: var(--ink); }
-  .login:focus-visible, .made-in a.t:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  /* A phone has room for the logo, the language and Log in. The CV check
-     is linked under the hero form. */
+  .made-in a.t:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  /* A phone has room for the logo and the language. The CV check is
+     linked under the hero form. */
   @media (max-width: 520px) { .made-in .wide, .made-in a.t.wide { display: none; } }
-  /* "Anmelden" is wider than "Log in": at 360px the German header needs the room. */
-  @media (max-width: 400px) { .made-in a.t { padding: 0 2px; } .login { padding: 0 12px; margin-left: 2px; } }
   /* the CV check link and the language switch need the room on a phone */
   @media (max-width: 520px) { .made-in .where { display: none; } }
 
@@ -490,7 +483,7 @@
 <div class="wrap">
   <header>
     <a class="logo" href="#">Career Sentinel<span class="dot">.</span></a>
-    <div class="made-in"><a class="t wide" href="https://app.careersentinel.de/check?lang=en">Free CV check</a><span class="wide" aria-hidden="true">·</span><a class="t" href="de/">DE</a><span class="where">· built in Stuttgart</span><a class="login" href="https://app.careersentinel.de/">Log in</a></div>
+    <div class="made-in"><a class="t wide" href="https://app.careersentinel.de/check?lang=en">Free CV check</a><span class="wide" aria-hidden="true">·</span><a class="t" href="de/">DE</a><span class="where">· built in Stuttgart</span></div>
   </header>
 
   <div class="hero">
@@ -589,7 +582,7 @@
         <h3>A short list, and what got left out</h3>
         <p class="step-p">Only jobs at your bar make the list. The rest is counted, so you know it looked.</p>
         <figure class="shot" aria-label="Example: the morning list in the app">
-          <div class="shot-bar"><span>app.careersentinel.de</span><span class="shot-tag">sample data</span></div>
+          <div class="shot-bar"><span>The app</span><span class="shot-tag">sample data</span></div>
           <div lang="en">
           <p class="s-h">Your matches</p>
           <p class="s-sub">Customer success · Stuttgart, 50 km · last scan 07:12</p>
@@ -626,7 +619,7 @@
         <h3>The German it really asks for</h3>
         <p class="step-p">Your level next to the ad's, on the A1 to C2 scale. If it asks for more than you have, <strong>you see that first.</strong></p>
         <figure class="shot" aria-label="Example: one job in the app">
-          <div class="shot-bar"><span>app.careersentinel.de</span><span class="shot-tag">sample data</span></div>
+          <div class="shot-bar"><span>The app</span><span class="shot-tag">sample data</span></div>
           <div lang="en">
           <div class="s-card">
             <div class="s-head">
