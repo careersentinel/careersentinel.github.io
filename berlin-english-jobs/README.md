@@ -11,30 +11,41 @@ One page per week, plus one fixed address that always points at the newest week.
 Note: this file is public like everything else in this repo. Numbers and notes
 behind each list stay in the private `internal/` folder.
 
-## Every week (about 15 minutes)
+## Every week (automated)
 
-1. **Pick the jobs.** Use that week's notes in `internal/english-jobs-berlin-<date>.md`
-   (12 roles plus 2 spares). Only company, role and link go on the page.
-2. **Check every link on the day.** A 200 is not enough. Ashby:
-   `api.ashbyhq.com/posting-api/job-board/<org>` must list the job id.
-   Greenhouse: `boards-api.greenhouse.io/v1/boards/<board>/jobs/<id>` returns
-   the title (EU boards: the job page must not redirect to `?error=true`).
-   Lever: `api.eu.lever.co/v0/postings/<org>/<id>` returns 200. Swap in a spare
-   for any dead one, and tell the LinkedIn post if it names the roles.
-3. **Copy last week's folder** to the new date. In the copy, change:
-   the title, description, og tags and canonical (dates and URL), the eyebrow
-   date, the 450 / "about 3 in 10" numbers in the intro, the 12 cards, the
-   `utm_campaign` on the waitlist button, the `week` in the click script, and
-   the month in the commented-out old-week banner ("early November").
-   Run `founder-voice` and the `copy-checker` agent on the changed text.
-4. **Move the latest pointer.** In `berlin-english-jobs/index.html`, change the
-   date in the four places marked `LATEST`.
-5. **Old weeks.** On the week that is now about 3 weeks old, uncomment the
-   `OLD WEEK BANNER` block (it links to the latest address, so it never needs
-   another edit). Later,
-   uncomment the `noindex` line in its head, or delete the folder.
-6. Preview, commit, push to `main` (Vercel deploys it). The LinkedIn first
-   comment gets the dated URL, so the post keeps pointing at its own 12 jobs.
+`scripts/berlin_jobs.py` does the site part. The week file is
+`internal/berlin-jobs/<Monday>.json` (git-ignored, so the spares and notes
+never go public):
+
+```json
+{
+  "week": "2026-11-02",
+  "english_ads": 450,
+  "german_required": 138,
+  "jobs":   [{"company": "Doctolib", "role": "Senior Software Engineer, Node.js/TypeScript", "url": "https://..."}],
+  "spares": [{"company": "Vercel", "role": "...", "url": "https://...", "greenhouse_board": "optional"}]
+}
+```
+
+`jobs` holds 12, `spares` a few more. `english_ads` is the English Berlin ads
+long enough to check, `german_required` how many of those still ask for German.
+The page only ever says "about N in 10".
+
+1. `python3 scripts/berlin_jobs.py check <week file>` asks each job board
+   whether each job is still open, swaps a closed one for the next open spare
+   in the same spot, writes the file back, and exits 1 if fewer than 12 are open.
+   A 200 from the ad page is not enough (Ashby answers 200 for closed jobs).
+2. `python3 scripts/berlin_jobs.py build <week file>` writes
+   `berlin-english-jobs/<week>/index.html` from `scripts/berlin_jobs_week.html`,
+   moves the "latest" pointer, and ages old weeks: banner at 21 days,
+   `noindex` at 56. Old pages get nothing else.
+3. Commit and push to `main`; Vercel deploys it.
+4. The LinkedIn post is built from the same week file, so the page and the post
+   always name the same 12 jobs. Run `check` again right before posting; if it
+   swaps a job, rebuild and push before the post goes out.
+
+To change the page copy, edit `scripts/berlin_jobs_week.html`, run
+`founder-voice` and the `copy-checker` agent, then rebuild the current week.
 
 ## Analytics
 
