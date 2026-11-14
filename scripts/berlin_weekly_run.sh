@@ -12,8 +12,8 @@
 # checkout's internal/ (git-ignored).
 #
 # DRY_RUN=1: export (only if the week file is missing), check, build, voice
-# lint, then the LinkedIn command WITHOUT --publish. Nothing is pushed or
-# posted. Before the page builder is on main, add BUILD_REF=berlin-jobs-automation.
+# lint, then `cs-linkedin weekly berlin <file> --publish --dry-run` (the real
+# hands-off checks, writes nothing). Nothing is pushed or posted. Before the page builder is on main, add BUILD_REF=berlin-jobs-automation.
 # Overrides: EXPORT_SCRIPT (default: the app's tools/weekly_english_jobs.py),
 # LINKEDIN_BIN, POST_AT (default 08:30). Exit 0 = done, 1 = HOLD (reason printed).
 set -euo pipefail
@@ -75,9 +75,9 @@ EOF
 python3 "$HOME/.claude/skills/founder-voice/voice_lint.py" "$TXT" || hold "voice lint failed on the page text"
 
 if [ "${DRY_RUN:-0}" = 1 ]; then
-  step "dry run: LinkedIn command without --publish"
+  step "dry run: LinkedIn hands-off checks, nothing written or posted"
   if [ -x "$LINKEDIN_BIN" ] && "$LINKEDIN_BIN" weekly berlin --help >/dev/null 2>&1; then
-    "$LINKEDIN_BIN" weekly berlin "$FILE" || echo "(LinkedIn dry run exited $?; expected while the page isn't live)"
+    "$LINKEDIN_BIN" weekly berlin "$FILE" --publish --dry-run || echo "(LinkedIn dry run exited $?; expected while the page isn't live)"
   else
     echo "LinkedIn command not built yet, skipped"
   fi
