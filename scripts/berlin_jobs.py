@@ -31,6 +31,7 @@ import json
 import re
 import sys
 import threading
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -55,15 +56,31 @@ NEIGHBOURS = {"starting": ["mid", "senior"], "mid": ["starting", "senior"], "sen
 
 # ---------------------------------------------------------------- link check
 
+_host_slots: dict[str, threading.Semaphore] = {}
+_host_lock = threading.Lock()
+
+
+def _slot(url: str) -> threading.Semaphore:
+    """At most 2 requests at a time per site; Arbeitnow answers 429 to more."""
+    host = url.split("/")[2]
+    with _host_lock:
+        return _host_slots.setdefault(host, threading.Semaphore(1 if "arbeitnow" in host else 2))
+
+
 def _get(url: str, timeout: int = 30) -> tuple[int, str, str]:
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.status, r.geturl(), r.read().decode("utf-8", "replace")
-    except urllib.error.HTTPError as e:
-        return e.code, url, ""
-    except Exception as e:  # DNS, timeout, TLS
-        return 0, url, f"{type(e).__name__}: {e}"
+    for wait in (3, 10, 30, None):
+        with _slot(url):
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    return r.status, r.geturl(), r.read().decode("utf-8", "replace")
+            except urllib.error.HTTPError as e:
+                if e.code != 429 or wait is None:
+                    return e.code, url, ""
+            except Exception as e:  # DNS, timeout, TLS
+                return 0, url, f"{type(e).__name__}: {e}"
+        time.sleep(wait)
+    return 429, url, ""
 
 
 _cache: dict[str, object] = {}
@@ -238,15 +255,41 @@ def ranges(monday: dt.date) -> dict:
 def clean(text: str) -> str:
     """Job titles arrive with dashes and gender tags; the site has neither."""
     text = re.sub(r"\s*\((?:[mwfdxa]\s*/\s*){1,3}[mwfdxa]\)|\s*\((?:all genders|f/m/x|x/f/m)\)", "", text, flags=re.I)
+    text = re.sub(r"\s+[–—-]\s+(?=\()", " ", text)          # "Role - (Vendor)" -> "Role (Vendor)"
     text = re.sub(r"\s+[–—-]\s+", ", ", text).replace("–", " to ").replace("—", ", ")
+    text = re.sub(r"\(\s*\)", "", text)
     return re.sub(r"\s{2,}", " ", text).strip(" ,")
+
+
+# The export's German line is a window of ad text that can start and end
+# mid-sentence. Quote only the requirement itself.
+_GERMAN_REQ = re.compile(
+    r"(?:(?:business|full working|professional|native|near[- ]native|excellent|very good|good|strong|"
+    r"solid|advanced|fluent|full)[- ](?:level |proficiency |fluency )?)*"
+    r"(?:fluent |fluency in |proficiency in |knowledge of |command of |skills in )?"
+    r"(?:written and (?:spoken|verbal) |spoken and written |verbal and written )?"
+    r"German(?: language)?(?: skills)?(?:\s*\(?(?:at )?(?:level )?[ABC][12](?:\s*[/+-]\s*[ABC]?[12])?(?: level)?\)?)?",
+    re.I)
+
+
+def german_phrase(line: str) -> str:
+    best = ""
+    for m in _GERMAN_REQ.finditer(line):
+        phrase = m.group(0).strip(" ,.;:(")
+        if len(phrase.split()) > len(best.split()):
+            best = phrase
+    if len(best.split()) < 2:  # a bare "German" says nothing on its own
+        return ""
+    if best.count("(") > best.count(")"):
+        best += ")"
+    return best[0].upper() + best[1:]
 
 
 ARROW = '<span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span>'
 
 
 def _esc(role: dict) -> tuple[str, str, str]:
-    return (html.escape(clean(role["company"])), html.escape(clean(role["title"])),
+    return (html.escape(clean(role["company"])), html.escape(clean(role.get("display_title") or role["title"])),
             html.escape(role["url"], quote=True))
 
 
@@ -272,7 +315,7 @@ def _by_level(roles: list[dict]) -> dict[str, list[dict]]:
 def caught_html(caught: list[dict]) -> str:
     items = []
     for c in caught[:3]:  # company and url are for checking only; never published
-        line = clean(c.get("german_line", "")).strip(" .\"'“”")
+        line = german_phrase(clean(c.get("german_line", "")))
         if not line or not c.get("title"):
             continue
         # The quote comes straight from the ad; skip it if it names the employer.
@@ -304,7 +347,7 @@ def render(data: dict) -> str:
                            + "".join(card(r) for r in group) + "    </ol>\n")
     groups_html = ""
     for key, label in LEVELS:
-        group = sorted(_by_level(listed)[key], key=lambda r: (clean(r["company"]).lower(), clean(r["title"]).lower()))
+        group = sorted(_by_level(listed)[key], key=lambda r: (clean(r["company"]).lower(), clean(r.get("display_title") or r["title"]).lower()))
         if group:
             groups_html += (f'    <details>\n      <summary>{label}<span class="n">{len(group)}</span></summary>\n'
                             f'      <ul class="rows">\n' + "".join(row(r) for r in group) + "      </ul>\n    </details>\n")
