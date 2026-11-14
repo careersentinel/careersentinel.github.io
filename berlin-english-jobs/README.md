@@ -13,36 +13,31 @@ behind each list stay in the private `internal/` folder.
 
 ## Every week (automated)
 
-`scripts/berlin_jobs.py` does the site part. The week file is
-`internal/berlin-jobs/<Monday>.json` (git-ignored, so the spares and notes
-never go public):
+`scripts/berlin_jobs.py` does the site part. Its input is the week file the
+app export writes, `internal/berlin-week-<Monday>.json` (git-ignored). The
+shape is set out in `internal/berlin-weekly-contract.md`: `week`, `counts`,
+`german_share_in_10`, `roles` (every English Berlin role that week with no
+German requirement found, each with a `level` of starting, mid or senior),
+`shortlist` (12 indexes into `roles`) and `caught` (up to 3 ads that did ask
+for German; company and URL are for checking only and never shown).
 
-```json
-{
-  "week": "2026-11-02",
-  "english_ads": 450,
-  "german_required": 138,
-  "jobs":   [{"company": "Doctolib", "role": "Senior Software Engineer, Node.js/TypeScript", "url": "https://..."}],
-  "spares": [{"company": "Vercel", "role": "...", "url": "https://...", "greenhouse_board": "optional"}]
-}
-```
-
-`jobs` holds 12, `spares` a few more. `english_ads` is the English Berlin ads
-long enough to check, `german_required` how many of those still ask for German.
-The page only ever says "about N in 10".
+The page shows the 12 picks grouped by level (🌱 Starting out, 💼 Mid-level,
+🚀 Senior and lead, the same labels as the post), then the caught ads by role
+title and German line only, then every role in three collapsible groups. The
+numbers are always "about N in 10", never the raw German count.
 
 1. `python3 scripts/berlin_jobs.py check <week file>` asks each job board
-   whether each job is still open, swaps a closed one for the next open spare
-   in the same spot, writes the file back, and exits 1 if fewer than 12 are open.
-   A 200 from the ad page is not enough (Ashby answers 200 for closed jobs).
+   whether each role is still open (a 200 from the ad page is not enough;
+   Ashby answers 200 for closed jobs), marks every role `page_check`, replaces
+   a pick that isn't confirmed open with the next open role that meets the
+   contract's shortlist rules (same level first, one per company), writes the
+   file back, and exits 1 if fewer than 12 picks are left. Run it before the
+   LinkedIn prep reads the file, so the post and the page name the same 12.
 2. `python3 scripts/berlin_jobs.py build <week file>` writes
    `berlin-english-jobs/<week>/index.html` from `scripts/berlin_jobs_week.html`,
-   moves the "latest" pointer, and ages old weeks: banner at 21 days,
-   `noindex` at 56. Old pages get nothing else.
-3. Commit and push to `main`; Vercel deploys it.
-4. The LinkedIn post is built from the same week file, so the page and the post
-   always name the same 12 jobs. Run `check` again right before posting; if it
-   swaps a job, rebuild and push before the post goes out.
+   moves the "latest" pointer, and ages old weeks: banner at 21 days, `noindex`
+   at 56. Old pages get nothing else. `--site DIR` builds into a copy instead.
+3. Commit on a branch. Pushing to `main` (live on Vercel) waits for Maher.
 
 To change the page copy, edit `scripts/berlin_jobs_week.html`, run
 `founder-voice` and the `copy-checker` agent, then rebuild the current week.

@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{COUNT}} Berlin jobs in English that don't ask for German ({{RANGE_SHORT}}) | Career Sentinel</title>
-<meta name="description" content="Career Sentinel read {{N_ADS}} Berlin job ads written in English, first seen {{RANGE_LONG}}. About {{SHARE}} still asked for German. Here are {{COUNT}} that didn't.">
-<meta property="og:title" content="{{COUNT}} Berlin jobs in English that don't ask for German">
-<meta property="og:description" content="{{N_ADS}} Berlin job ads in English, first seen {{RANGE_NO_YEAR}}. About {{SHARE}} still asked for German. Here are {{COUNT}} that didn't.">
+<title>{{N_ROLES}} Berlin jobs in English that don't ask for German ({{RANGE_SHORT}}) | Career Sentinel</title>
+<meta name="description" content="Career Sentinel read {{N_ADS}} Berlin job ads written in English, first seen {{RANGE_LONG}}. About {{SHARE}} still asked for German. Here are the {{N_ROLES}} that didn't.">
+<meta property="og:title" content="{{N_ROLES}} Berlin jobs in English that don't ask for German">
+<meta property="og:description" content="{{N_ADS}} Berlin job ads in English, first seen {{RANGE_NO_YEAR}}. About {{SHARE}} still asked for German. Here are the {{N_ROLES}} that didn't.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://careersentinel.de/berlin-english-jobs/{{WEEK}}/">
 <meta property="og:image" content="https://careersentinel.de/og-image.png">
@@ -80,6 +80,32 @@
     stroke-linecap: round; stroke-linejoin: round; }
 
   section { padding: 40px 0 0; }
+  .lvl { font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-dim); margin: 22px 0 10px; }
+  .lvl:first-of-type { margin-top: 4px; }
+  .caught ul { list-style: none; }
+  .caught li { background: var(--surface); border-left: 3px solid var(--warn); border-radius: 0 8px 8px 0;
+    padding: 12px 16px; color: var(--ink-dim); }
+  .caught li + li { margin-top: 8px; }
+  .caught b { color: var(--ink); font-weight: 600; }
+  .caught q { color: var(--ink); }
+  .all > p { color: var(--ink-dim); margin-bottom: 14px; max-width: 56ch; }
+  details { border-top: 1px solid var(--line); }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary { display: flex; align-items: center; justify-content: space-between; min-height: 56px; cursor: pointer;
+    list-style: none; font-family: var(--display); font-weight: 700; font-size: 19px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-family: var(--mono); font-size: 22px; color: var(--accent); }
+  details[open] summary::after { content: "\2212"; }
+  summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  summary .n { font-family: var(--mono); font-size: 13px; font-weight: 400; color: var(--ink-dim); margin: 0 auto 0 10px; }
+  ul.rows { list-style: none; padding-bottom: 12px; }
+  ul.rows a { display: flex; flex-direction: column; justify-content: center; min-height: 52px; padding: 8px 2px;
+    border-top: 1px solid rgba(22, 111, 148, 0.45); color: var(--ink); text-decoration: none; }
+  ul.rows li:first-child a { border-top: 0; }
+  ul.rows a:hover { color: var(--ink); background: var(--surface); }
+  ul.rows .co { font-size: 12px; }
+  ul.rows .t { font-size: 16px; line-height: 1.35; }
   h2 { font-family: var(--display); font-weight: 800; font-size: 24px; letter-spacing: -0.015em; margin-bottom: 12px; }
   .honest ul { list-style: none; color: var(--ink-dim); max-width: 60ch; }
   .honest li { padding-left: 18px; position: relative; }
@@ -133,19 +159,25 @@
 
   <div class="intro">
     <div class="eyebrow">Berlin · {{RANGE_LONG}}</div>
-    <h1>{{COUNT}} Berlin jobs in English that <em>don't ask for German</em></h1>
+    <h1>{{N_ROLES}} Berlin jobs in English that <em>don't ask for German</em></h1>
     <p>Career Sentinel read <strong>{{N_ADS}} Berlin job ads written in English</strong>, all first seen between {{RANGE_BETWEEN}}. About <strong>{{SHARE}}</strong> still asked for German somewhere in the ad.</p>
-    <p>Here are {{COUNT}} that didn't. Tap one to open the ad.</p>
+    <p>Here are the ones that didn't. This week's 12 picks come first, then all of them by level. Tap one to open the ad.</p>
   </div>
 
-  <ol class="jobs">
-{{CARDS}}  </ol>
+  <section class="picks" aria-label="This week's 12">
+    <h2>This week's 12</h2>
+{{PICKS}}  </section>
+{{CAUGHT}}
+  <section class="all">
+    <h2>All {{N_ROLES}} this week</h2>
+    <p>Grouped by level. Tap a group to open it.</p>
+{{GROUPS}}  </section>
 
   <section class="honest">
     <h2>Before you apply</h2>
     <ul>
       <li>This only covers the job boards Career Sentinel scans. It's not every job in Berlin.</li>
-      <li>The German check isn't perfect. Read the ad yourself before you apply.</li>
+      <li>Career Sentinel checked every ad for German, no person read them. The check isn't perfect, so read the ad yourself before you apply.</li>
       <li>Some of these may be filled by now.</li>
     </ul>
   </section>
