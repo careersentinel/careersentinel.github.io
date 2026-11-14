@@ -5,21 +5,26 @@
 #
 #   scripts/berlin_weekly_run.sh            # last complete week (Mon to Sun)
 #   scripts/berlin_weekly_run.sh 2026-11-09 # a given Monday
-#   DRY_RUN=1 scripts/berlin_weekly_run.sh  # everything except push and post
+#   DRY_RUN=1 scripts/berlin_weekly_run.sh  # no push, no post (see below)
 #
-# Runs from a dedicated worktree on origin/main, so it never switches
-# branches in the shared checkout. The week file stays in the shared
+# Runs from a dedicated worktree on origin/main (or BUILD_REF), so it never
+# switches branches in the shared checkout. The week file stays in the shared
 # checkout's internal/ (git-ignored).
+#
+# DRY_RUN=1: export (only if the week file is missing), check, build, voice
+# lint, then the LinkedIn command WITHOUT --publish. Nothing is pushed or
+# posted. Before the page builder is on main, add BUILD_REF=berlin-jobs-automation.
+# Overrides: EXPORT_SCRIPT (default: the app's tools/weekly_english_jobs.py),
+# LINKEDIN_BIN, POST_AT (default 08:30). Exit 0 = done, 1 = HOLD (reason printed).
 set -euo pipefail
 
 BIZ="$HOME/career_sentinel_business"
 APP="$HOME/career_sentinel_app"
 WT="$BIZ/.claude/worktrees/weekly-publish"
 POST_AT="${POST_AT:-08:30}"
-# Set once the LinkedIn side exists, e.g. in ~/.config/career-sentinel/weekly.env:
-#   LINKEDIN_CMD="$HOME/career_sentinel_linkedin/.venv/bin/cs-linkedin weekly-jobs publish"
-[ -f "$HOME/.config/career-sentinel/weekly.env" ] && . "$HOME/.config/career-sentinel/weekly.env"
-LINKEDIN_CMD="${LINKEDIN_CMD:-}"
+BUILD_REF="${BUILD_REF:-origin/main}"
+EXPORT_SCRIPT="${EXPORT_SCRIPT:-$APP/tools/weekly_english_jobs.py}"
+LINKEDIN_BIN="${LINKEDIN_BIN:-$HOME/career_sentinel_linkedin/.venv/bin/cs-linkedin}"
 
 hold() { echo "HOLD: $*"; exit 1; }
 step() { echo; echo "== $*"; }
@@ -33,17 +38,20 @@ echo "week $WEEK, file $FILE, dry run: ${DRY_RUN:-0}"
 
 step "1. export (read-only production pull)"
 if [ -f "$FILE" ]; then echo "week file exists, not pulling again"; else
-  python3 "$APP/tools/weekly_english_jobs.py" --via-railway --week "$WEEK" \
+  python3 "$EXPORT_SCRIPT" --via-railway --week "$WEEK" \
     --out "$BIZ/internal/berlin-week-{week}.json" || hold "export failed"
 fi
 [ -f "$FILE" ] || hold "export wrote no file"
+python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); assert {"week","counts","german_share_in_10","roles","shortlist"} <= d.keys()' "$FILE" \
+  || hold "week file is not in the contract format (is the new export on the app's main?)"
 
-step "2. publish worktree on origin/main"
+step "2. publish worktree on $BUILD_REF"
+[ "$BUILD_REF" = origin/main ] || [ "${DRY_RUN:-0}" = 1 ] || hold "BUILD_REF other than origin/main is for dry runs only"
 git -C "$BIZ" fetch -q origin main || hold "git fetch failed"
-if [ ! -d "$WT" ]; then git -C "$BIZ" worktree add -q --detach "$WT" origin/main || hold "worktree add failed"; fi
-git -C "$WT" checkout -q --detach origin/main
-git -C "$WT" reset -q --hard origin/main
-[ -f "$WT/scripts/berlin_jobs.py" ] || hold "scripts/berlin_jobs.py is not on main yet"
+if [ ! -d "$WT" ]; then git -C "$BIZ" worktree add -q --detach "$WT" "$BUILD_REF" || hold "worktree add failed"; fi
+git -C "$WT" checkout -q --detach "$BUILD_REF"
+git -C "$WT" reset -q --hard "$BUILD_REF"
+[ -f "$WT/scripts/berlin_jobs.py" ] || hold "scripts/berlin_jobs.py is not on $BUILD_REF yet"
 
 step "3. check every link (writes the file back)"
 python3 "$WT/scripts/berlin_jobs.py" check "$FILE" || hold "fewer than 12 picks are open"
@@ -63,6 +71,12 @@ EOF
 python3 "$HOME/.claude/skills/founder-voice/voice_lint.py" "$TXT" || hold "voice lint failed on the page text"
 
 if [ "${DRY_RUN:-0}" = 1 ]; then
+  step "dry run: LinkedIn command without --publish"
+  if [ -x "$LINKEDIN_BIN" ] && "$LINKEDIN_BIN" weekly berlin --help >/dev/null 2>&1; then
+    "$LINKEDIN_BIN" weekly berlin "$FILE" || echo "(LinkedIn dry run exited $?; expected while the page isn't live)"
+  else
+    echo "LinkedIn command not built yet, skipped"
+  fi
   echo; echo "DRY RUN done. Page built in $WT, nothing pushed or posted."; exit 0
 fi
 
@@ -90,12 +104,13 @@ sys.exit(1)
 EOF
 
 step "8. LinkedIn post"
-[ -n "$LINKEDIN_CMD" ] || hold "page is live at $URL, but the LinkedIn command isn't set up yet, so nothing was posted"
+{ [ -x "$LINKEDIN_BIN" ] && "$LINKEDIN_BIN" weekly berlin --help >/dev/null 2>&1; } \
+  || hold "page is live at $URL, but the LinkedIn command isn't set up yet, so nothing was posted"
 NOW=$(date +%H:%M)
 if [[ "$NOW" < "$POST_AT" ]]; then
   echo "waiting until $POST_AT"
   while [[ "$(date +%H:%M)" < "$POST_AT" ]]; do sleep 30; done
 fi
-$LINKEDIN_CMD "$FILE" || hold "LinkedIn command refused or failed (page is live at $URL)"
+"$LINKEDIN_BIN" weekly berlin "$FILE" --publish || hold "LinkedIn command exited $? (its output is above); page is live at $URL"
 
 echo; echo "DONE: page $URL live, post published."
