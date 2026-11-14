@@ -38,6 +38,10 @@ echo "week $WEEK, file $FILE, dry run: ${DRY_RUN:-0}"
 
 step "1. export (read-only production pull)"
 if [ -f "$FILE" ]; then echo "week file exists, not pulling again"; else
+  # Maher's standing OK for this one weekly read (14 Nov 2026). Delete the
+  # file to withdraw it; the run then stops here.
+  [ -f "$BIZ/internal/berlin-weekly-standing-ok.md" ] \
+    || hold "no standing OK for the weekly production read (internal/berlin-weekly-standing-ok.md)"
   python3 "$EXPORT_SCRIPT" --via-railway --week "$WEEK" \
     --out "$BIZ/internal/berlin-week-{week}.json" || hold "export failed"
 fi
